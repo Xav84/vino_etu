@@ -64,7 +64,7 @@ class Controler
 			include("vues/cellier.php");
 			include("vues/pied.php");
 		}
-		if (isset($_POST['nom_bouteille_cellier'])) {
+		if (isset($_POST['recherche'])) {
 			$recherche = $_POST['nom_bouteille_cellier'];
 			$bte = new Bouteille();
 

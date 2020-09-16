@@ -420,9 +420,14 @@ class Bouteille extends Modele
 		}
 
 		/* millesime */
-		if (!preg_match('/^\d{4}$/', $data->millesime) || $data->millesime > date('Y')) {
+		if ($data->millesime !== "" && !preg_match('/^\d{4}$/', $data->millesime)) {
 			$this->erreurs['millesime'] = "Veuillez entrer une année à 4 chiffres.";
 		}
+		if ($data->millesime !== "" && $data->millesime > date('Y')) {
+			$this->erreurs['millesime'] = "Veuillez entrer une année inférieur ou égale à l'année en cours.";
+		}
+
+
 
 		if (empty($this->erreurs)) {
 			//requete pour vérifier si la bouteille à ajouter n'est pas déjà au cellier :

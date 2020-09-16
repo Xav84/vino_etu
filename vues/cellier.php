@@ -74,9 +74,9 @@
     <form id="recherche_cellier" method="post">
         <div class="rechercheBouteilleCellier" vertical layout>
             <h3><strong>Recherche par id,nom ou pays:</strong></h3>
-            <input type="text" class="nom_bouteille_cellier" name="nom_bouteille_cellier" value="">
+            <input type="text" class="nom_bouteille_cellier" name="nom_bouteille_cellier">
             <input type="submit" name="recherche" value="Rechercher">
-            <ul class="listeAutoComplete">
+            <ul class="listeAutoCompleteCellier">
             </ul>
 
     </form>
