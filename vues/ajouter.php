@@ -5,15 +5,15 @@
         <ul class="listeAutoComplete">
         </ul>
         <div>
-            <p>Nom : <span data-id="" class="nom_bouteille"></span></p>
+            <p>Nom : <span name="nom" data-id_cellier="<?= $_SESSION['info_utilisateur']['id'] ?>" class="nom_bouteille"></span></p>
+            <p>Prix : <span name="prix"></span></p>
+            <p>Code SAQ : <span name="code_saq"></span></p>
             <p>Millesime : <input name="millesime"></p>
             <span class='erreur millesime'></span>
-            <p>Quantite : <input name="quantite" value="1"></p>
+            <p>Quantite : <input type="number" name="quantite" value="1"></p>
             <span class='erreur quantite'></span>
             <p>Date achat : <input type="date" name="date_achat"></p>
             <span class='erreur date_achat'></span>
-            <p>Prix : <input name="prix"></p>
-            <span class='erreur prix'></span>
             <p>Garde : <input name="garde_jusqua"></p>
             <span class='erreur garde_jusqua'></span>
             <p>Notes <input name="notes"></p>

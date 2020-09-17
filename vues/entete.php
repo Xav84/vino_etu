@@ -17,6 +17,8 @@
 		<script src="./js/main.js"></script>
 	</head>
 	<body >
+        <span class="utlisateur_connecte">Bienvenue <?= $_SESSION['info_utilisateur']['prenom_utilisateur'] ?? '' ?> !</span>
+        <a href="?requete=deconnexion"> déconnexion</a>
 		<header>
 			<h1>Un petit verre de vino ?</h1>
 			<nav>

@@ -1,7 +1,7 @@
 <div class="modifier">
 
     <div class="modifierBouteille" vertical layout>
-        <h2 class="nom_bouteille" data-id="<?php echo $data[0]["vino__bouteille_id"] ?>">Modifier : <span data-id=""></span><?php echo $data[0]["nom"] ?></h2>
+        <h2 class="nom_bouteille" data-id="<?php echo $data[0]["vino__bouteille_id"] ?>"  data-id_cellier="<?= $_GET['cellier'] ?>">Modifier : <span data-id=""></span><?php echo $data[0]["nom"] ?></h2>
         <div>
 
             <p>Date achat : <input type="date" name="date_achat" value='<?php echo $data[0]["date_achat"] ?>'></p>

@@ -52,8 +52,8 @@ class SAQ extends Modele
 		$doc = new DOMDocument(); //instanciation de la classe DOMDocument()
 		$doc->recover = true;
 		$doc->strictErrorChecking = false;
-		@$doc->loadHTML(file_get_contents($url)); //chargement du code html de la page web
-		//@$doc->loadHTML(self::$_webpage);
+		@$doc->loadHTML(self::$_webpage); //chargement du code html de la page web
+		//@$doc -> loadHTML(self::$_webpage);
 		$elements = $doc->getElementsByTagName("li"); //Création de l'objet contenant la liste des 
 		//éléments li
 		$i = 0;
@@ -129,7 +129,6 @@ class SAQ extends Modele
 		$info = new stdClass(); //déclaration d'un objet vide
 		$info->img = $noeud->getElementsByTagName("img")->item(0)->getAttribute('src'); //TODO : Nettoyer le lien
 		$info->img = preg_replace('/https:/', '', $info->img);
-
 
 		$a_titre = $noeud->getElementsByTagName("a")->item(0);
 

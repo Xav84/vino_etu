@@ -98,13 +98,14 @@
                 <p class="quantite">Quantité : <span><?php echo $bouteille['quantite'] ?></span></p>
                 <p class="pays">Pays : <?php echo $bouteille['pays'] ?></p>
                 <p class="type">Type : <?php echo $bouteille['type'] ?></p>
+                <p class="type">Prix : <?php echo $bouteille['prix'] ?>$</p>
                 <p class="notes">Notes : <?php echo $bouteille['notes'] ?></p>
                 <p class="millesime">Millesime : <?php echo $bouteille['millesime'] ?></p>
                 <p class="date_achat">Date d'achat : <?php echo $bouteille['date_achat'] ?></p>
                 <p><a href="<?php echo $bouteille['url_saq'] ?>">Voir SAQ</a></p>
             </div>
 
-            <div class="options" data-id="<?php echo $bouteille['vino__bouteille_id'] ?>">
+            <div class="options" data-id_bouteille="<?php echo $bouteille['vino__bouteille_id'] ?>" data-id_cellier="<?php echo $bouteille['vino__cellier_id'] ?>">
 
                 <button class='btnModifier'><a href="?requete=modifierBouteilleCellier&id=<?php echo $bouteille['id'] ?>&cellier=<?php echo $bouteille['vino__cellier_id'] ?>">Modifier</a></button>
                 <button class='btnAjouter'>Ajouter</button>

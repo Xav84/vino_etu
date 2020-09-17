@@ -46,9 +46,8 @@ class Bouteille extends Modele
 	 * @return Array $rows contenant toutes les bouteilles.
 	 */
 	//clause WHERE de getListeBouteilleCellier() pour fin de test seulement 
-	public function getListeBouteilleCellier()
+	public function getListeBouteilleCellier($id_utilisateur = '')
 	{
-
 		$rows = array();
 		$requete = 'SELECT
 								c.vino__cellier_id,
@@ -73,7 +72,7 @@ class Bouteille extends Modele
 							INNER JOIN ' . self::BOUTEILLE . ' b ON c.vino__bouteille_id = b.id
 							INNER JOIN ' . self::CELLIER . ' vc ON c.vino__cellier_id = vc.id
 							INNER JOIN ' . self::TYPE . ' t ON t.id = b.fk_type_id
-							WHERE c.vino__cellier_id = 2';
+                            WHERE vc.fk_id_utilisateur =' . $id_utilisateur;
 
 		if (($res = $this->_db->query($requete)) ==     true) {
 			if ($res->num_rows) {
@@ -86,8 +85,6 @@ class Bouteille extends Modele
 			throw new Exception("Erreur de requête sur la base de donnée", 1);
 			//$this->_db->error;
 		}
-
-
 
 		return $rows;
 	}
@@ -260,7 +257,14 @@ class Bouteille extends Modele
 		$nom = preg_replace("/\*/", "%", $nom);
 
 		//echo $nom;
-		$requete = 'SELECT id, nom FROM ' . self::BOUTEILLE . ' WHERE LOWER(nom) like LOWER("%' . $nom . '%") LIMIT 0,' . $nb_resultat;
+		$requete = 'SELECT 
+							b.id, 
+							b.nom, 
+							b.code_saq, 
+							b.prix_saq 
+							FROM ' . self::BOUTEILLE . ' b 
+							WHERE LOWER(nom) like LOWER("%' . $nom . '%") 
+							LIMIT 0,' . $nb_resultat;
 		//var_dump($requete);
 		if (($res = $this->_db->query($requete)) ==     true) {
 			if ($res->num_rows) {
@@ -427,15 +431,13 @@ class Bouteille extends Modele
 			$this->erreurs['millesime'] = "Veuillez entrer une année inférieur ou égale à l'année en cours.";
 		}
 
-
-
 		if (empty($this->erreurs)) {
 			//requete pour vérifier si la bouteille à ajouter n'est pas déjà au cellier :
 			$sql = "SELECT vino__cellier_id, vino__bouteille_id FROM " . self::CELLIER_BOUTEILLE . " WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille;
 
 			//Si la bouteille est déjà au cellier, on incrémente seulement sa quantité, sinon on créé un nouvelle référence au cellier :
 			if ($this->_db->query($sql)->num_rows > 0) {
-				$reponse['data'] = $this->modifierQuantiteBouteilleCellier($data->id_bouteille, $data->quantite);
+				$reponse['data'] = $this->modifierQuantiteBouteilleCellier($data->id_bouteille, $data->id_cellier, $data->quantite);
 			} else {
 				$requete = "INSERT INTO " . self::CELLIER_BOUTEILLE . " (vino__cellier_id,vino__bouteille_id,date_achat,garde_jusqua,notes,prix,quantite,millesime) VALUES (?,?,?,?,?,?,?,?)";
 				$stmt = $this->_db->prepare($requete);
@@ -458,12 +460,12 @@ class Bouteille extends Modele
 	 * 
 	 * @return Boolean Succès ou échec de l'ajout.
 	 */
-	public function modifierQuantiteBouteilleCellier($id, $nombre)
+	public function modifierQuantiteBouteilleCellier($id_bouteille, $id_cellier, $nombre)
 	{
 
 		/* validation du nombre de bouteilles */
 		if (preg_match('/^[-+]?\d*$/', $nombre)) {
-			$requete = "UPDATE " . self::CELLIER_BOUTEILLE . " SET quantite = GREATEST(quantite + " . $nombre . ", 0) WHERE vino__bouteille_id = " . $id . " AND vino__cellier_id = 2";
+			$requete = "UPDATE " . self::CELLIER_BOUTEILLE . " SET quantite = GREATEST(quantite + " . $nombre . ", 0) WHERE vino__bouteille_id = " . $id_bouteille . " AND vino__cellier_id = $id_cellier";
 			//echo $requete;
 			$res = $this->_db->query($requete);
 

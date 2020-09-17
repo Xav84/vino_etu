@@ -89,3 +89,7 @@ footer p {
   border: 1px solid #888;
   width: 50%;
 }
+
+img{
+    max-height: 200px; /* limiter la taille des images des bouteilles */
+}
