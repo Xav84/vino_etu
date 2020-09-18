@@ -49,6 +49,9 @@ class Controler
 			case 'afficherCellier':
 				$this->afficherCellier();
 				break;
+			case 'afficherCatalogue':
+				$this->afficherCatalogue();
+				break;
 			case 'deconnexion':
 				$this->deconnexion();
 				break;
@@ -115,6 +118,42 @@ class Controler
 			$data = $bte->getListeBouteilleCellier($_GET['id_utilisateur'] ?? $id_utilisateur);
 			include("vues/entete.php");
 			include("vues/cellier.php");
+			include("vues/pied.php");
+		}
+	}
+
+	/**
+	 * Affiche la liste des bouteilles du cellier d'un utilisateur
+	 * @return files
+	 */
+	private function afficherCatalogue()
+	{
+		if (isset($_POST['tri'])) {
+			$type = $_POST['type'];
+			$ordre = $_POST['ordre'];
+			$bte = new Bouteille();
+
+			// var_dump($type, $ordre);
+			// exit;
+			$data = $bte->getListeBouteilleCatalogueTri($type, $ordre);
+			include("vues/entete.php");
+			include("vues/catalogue.php");
+			include("vues/pied.php");
+		} else if (isset($_POST['recherche'])) {
+			$recherche = $_POST['nom_bouteille_cellier'];
+			$bte = new Bouteille();
+
+			// var_dump($recherche);
+			// exit;
+			$data = $bte->getRechercheBouteilleCatalogue($recherche);
+			include("vues/entete.php");
+			include("vues/catalogue.php");
+			include("vues/pied.php");
+		} else {
+			$bte = new Bouteille();
+			$data = $bte->getListeBouteille();
+			include("vues/entete.php");
+			include("vues/catalogue.php");
 			include("vues/pied.php");
 		}
 	}
