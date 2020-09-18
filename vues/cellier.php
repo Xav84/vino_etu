@@ -24,6 +24,9 @@
                 <option <?php if (!(strcmp("date_achat", $_POST["type"]))) {
                             echo "selected=\"selected\"";
                         } ?>value="date_achat">Date d'achat</option>
+                <option <?php if (!(strcmp("prix", $_POST["type"]))) {
+                            echo "selected=\"selected\"";
+                        } ?>value="prix">Prix</option>
             </select>
         <?php
             //Si aucun champs sélectionné 
@@ -37,6 +40,7 @@
                 <option value="type">Type de vin</option>
                 <option value="quantite">Quantité</option>
                 <option value="date_achat">Date d'achat</option>
+                <option value="prix">Prix</option>
             </select>
         <?php
         }
