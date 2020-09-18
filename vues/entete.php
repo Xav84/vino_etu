@@ -8,32 +8,33 @@
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta name="viewport" content="width=device-width, minimum-scale=0.5, initial-scale=1.0, user-scalable=yes">
 
-		<link rel="stylesheet" href="./css/normalize.css" type="text/css" media="screen">
-		<link rel="stylesheet" href="./css/base_h5bp.css" type="text/css" media="screen">
-		<link rel="stylesheet" href="./css/main.css" type="text/css" media="screen">
-		<base href="<?php echo BASEURL; ?>">
-		<!--<script src="./js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>-->
-	<!--	<script src="./js/plugins.js"></script> -->
-		<script src="./js/main.js"></script>
-	</head>
-	<body >
-        <span class="utlisateur_connecte">Bienvenue <?= $_SESSION['info_utilisateur']['prenom_utilisateur'] ?? '' ?> !</span>
-        <a href="?requete=deconnexion"> déconnexion</a>
-		<header>
-			<h1>Un petit verre de vino ?</h1>
-			<nav>
-				<ul>
-					<li><a href="?requete=accueil">Mon cellier</a></li>
-					<li><a href="?requete=ajouterNouvelleBouteilleCellier">Ajouter une bouteille au cellier</a></li>
-				</ul>
-			</nav>
-		</header>
-		<main>
-			
 	<link rel="stylesheet" href="./css/normalize.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="./css/base_h5bp.css" type="text/css" media="screen">
 	<link rel="stylesheet" href="./css/main.css" type="text/css" media="screen">
-	<base href="<?php echo BASEURL; ?>"> <!-- Specify a default URL and a default target for all links on a page -->
+	<base href="<?php echo BASEURL; ?>">
+	<!--<script src="./js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>-->
+	<!--	<script src="./js/plugins.js"></script> -->
 	<script src="./js/main.js"></script>
 </head>
 
+<body>
+	<span class="utlisateur_connecte">Bienvenue <?= $_SESSION['info_utilisateur']['prenom_utilisateur'] ?? '' ?> !</span>
+	<a href="?requete=deconnexion"> déconnexion</a>
+	<header>
+		<h1>Un petit verre de vino ?</h1>
+		<nav>
+			<ul>
+				<li><a href="?requete=accueil">Mon cellier</a></li>
+				<li><a href="?requete=ajouterNouvelleBouteilleCellier">Ajouter une bouteille au cellier</a></li>
+				<li><a href="?requete=afficherCatalogue">Catalogue de la SAQ</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+
+		<link rel="stylesheet" href="./css/normalize.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="./css/base_h5bp.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="./css/main.css" type="text/css" media="screen">
+		<base href="<?php echo BASEURL; ?>"> <!-- Specify a default URL and a default target for all links on a page -->
+		<script src="./js/main.js"></script>
+		</head>
