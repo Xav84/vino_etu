@@ -40,7 +40,7 @@ class SAQ extends Modele
 	public function getProduits($nombre = 24, $page = 1)
 	{
 		$s = curl_init();
-		$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=1&product_list_limit=24&product_list_order=name_asc";
+		$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=1&product_list_limit=96&product_list_order=name_asc";
 		curl_setopt($s, CURLOPT_URL, $url);
 		curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
 		//curl_setopt($s, CURLOPT_FOLLOWLOCATION, 1);
@@ -52,8 +52,9 @@ class SAQ extends Modele
 		$doc = new DOMDocument(); //instanciation de la classe DOMDocument()
 		$doc->recover = true;
 		$doc->strictErrorChecking = false;
-		@$doc->loadHTML(self::$_webpage); //chargement du code html de la page web
-		//@$doc -> loadHTML(self::$_webpage);
+		//@$doc->loadHTML(self::$_webpage); //chargement du code html de la page web
+		@$doc->loadHTML(file_get_contents($url));
+
 		$elements = $doc->getElementsByTagName("li"); //Création de l'objet contenant la liste des 
 		//éléments li
 		$i = 0;
@@ -71,7 +72,7 @@ class SAQ extends Modele
 				echo "<br>Code de retour : " . $retour->raison . "<br>";
 				if ($retour->succes == false) {
 					echo "<pre>";
-					var_dump($info);
+					// var_dump($info);
 					echo "</pre>";
 					echo "<br>";
 				} else {
@@ -190,7 +191,7 @@ class SAQ extends Modele
 				$info->prix = preg_replace("/,/", ".", "$info->prix");
 			}
 		}
-		var_dump($info);
+		// var_dump($info);
 		return $info;
 	}
 
