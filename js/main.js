@@ -234,7 +234,7 @@ window.addEventListener("load", function () {
           .catch((error) => {
             console.error(error);
           });
-
+        //redirect vers le cellier
         document
           .querySelector(".retour_cellier")
           .addEventListener("click", (_) => {

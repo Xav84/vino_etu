@@ -73,8 +73,8 @@
     <!-- Recherche dans le celier -->
     <form id="recherche_cellier" method="post">
         <div class="rechercheBouteilleCellier" vertical layout>
-            <h3><strong>Recherche par id,nom ou pays:</strong></h3>
-            <input type="text" class="nom_bouteille_cellier" name="nom_bouteille_cellier">
+            <h3><strong>Recherchez dans votre cellier:</strong></h3>
+            <input type="text" placeholder="nom, pays ou id" class="nom_bouteille_cellier" name="nom_bouteille_cellier">
             <input type="submit" name="recherche" value="Rechercher">
             <ul class="listeAutoCompleteCellier">
             </ul>
@@ -94,7 +94,7 @@
                 <img src="https:<?php echo $bouteille['image'] ?>">
             </div>
             <div class="description">
-                <p class="nom">Nom : <?php echo $bouteille['nom'] ?></p>
+                <p class="nom">Nom : <?php echo $bouteille['nom'], " " . "[" . "id " . $bouteille['id'] . "]" ?></p>
                 <p class="quantite">Quantité : <span><?php echo $bouteille['quantite'] ?></span></p>
                 <p class="pays">Pays : <?php echo $bouteille['pays'] ?></p>
                 <p class="type">Type : <?php echo $bouteille['type'] ?></p>

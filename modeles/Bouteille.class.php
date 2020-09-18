@@ -263,7 +263,7 @@ class Bouteille extends Modele
 							b.code_saq, 
 							b.prix_saq 
 							FROM ' . self::BOUTEILLE . ' b 
-							WHERE LOWER(nom) like LOWER("%' . $nom . '%") 
+							WHERE LOWER(nom) like LOWER("%' . $nom . '%")
 							LIMIT 0,' . $nb_resultat;
 		//var_dump($requete);
 		if (($res = $this->_db->query($requete)) ==     true) {
@@ -364,8 +364,11 @@ class Bouteille extends Modele
 		}
 
 		/* millesime */
-		if (!preg_match('/^\d{4}$/', $data->millesime) || $data->millesime >= date('Y')) {
+		if ($data->millesime !== "" && !preg_match('/^\d{4}$/', $data->millesime)) {
 			$this->erreurs['millesime'] = "Veuillez entrer une année à 4 chiffres.";
+		}
+		if ($data->millesime !== "" && $data->millesime > date('Y')) {
+			$this->erreurs['millesime'] = "Veuillez entrer une année inférieur ou égale à l'année en cours.";
 		}
 		if (empty($this->erreurs)) {
 			//requete pour vérifier si la bouteille à ajouter n'est pas déjà au cellier :
@@ -433,12 +436,24 @@ class Bouteille extends Modele
 
 		if (empty($this->erreurs)) {
 			//requete pour vérifier si la bouteille à ajouter n'est pas déjà au cellier :
-			$sql = "SELECT vino__cellier_id, vino__bouteille_id FROM " . self::CELLIER_BOUTEILLE . " WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille;
+			$sql = "SELECT 
+								c.vino__cellier_id, 
+								c.vino__bouteille_id,
+								b.id,
+								b.code_saq
+								FROM cellier__bouteille c
+								INNER JOIN vino__bouteille b
+								WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille . " AND code_saq =" . $data->code;
+
+
+			// $sql = "SELECT vino__cellier_id, vino__bouteille_id FROM " . self::CELLIER_BOUTEILLE . " WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille;
 
 			//Si la bouteille est déjà au cellier, on incrémente seulement sa quantité, sinon on créé un nouvelle référence au cellier :
 			if ($this->_db->query($sql)->num_rows > 0) {
+
 				$reponse['data'] = $this->modifierQuantiteBouteilleCellier($data->id_bouteille, $data->id_cellier, $data->quantite);
 			} else {
+
 				$requete = "INSERT INTO " . self::CELLIER_BOUTEILLE . " (vino__cellier_id,vino__bouteille_id,date_achat,garde_jusqua,notes,prix,quantite,millesime) VALUES (?,?,?,?,?,?,?,?)";
 				$stmt = $this->_db->prepare($requete);
 				$stmt->bind_param('iisisdii', $data->id_cellier, $data->id_bouteille, $data->date_achat, $data->garde_jusqua, $data->notes, $data->prix, $data->quantite, $data->millesime);
