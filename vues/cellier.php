@@ -1,5 +1,6 @@
 <div class="cellier">
     <form id="tri" method="post">
+        <h2><strong>Votre cellier</strong></h2>
         <h3><strong>Critères de tri :</strong></h3>
         <?php
         //Vérifie si un champs de tri "type" a déja été appliqué
