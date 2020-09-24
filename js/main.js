@@ -8,8 +8,8 @@
  *
  */
 
-const BaseURL = "http://localhost/Projet_final/Git/projets/vino_etu/";
-//const BaseURL = document.baseURI;
+//const BaseURL = "http://localhost/Projet_final/Git/projets/vino_etu/";
+const BaseURL = document.baseURI;
 console.log(BaseURL);
 window.addEventListener("load", function () {
   console.log("load");
@@ -167,13 +167,50 @@ window.addEventListener("load", function () {
       if (evt.target.tagName == "LI") {
         bouteille.nom.dataset.id = evt.target.dataset.id;
         bouteille.nom.innerHTML = evt.target.innerHTML;
-        // bouteille.prix.dataset.prix = evt.target.dataset.prix;
-        bouteille.prix.innerHTML = evt.target.dataset.prix + "$";
-        // bouteille.code_saq.dataset.code_saq = evt.target.dataset.code_saq;
-        bouteille.code.innerHTML = evt.target.dataset.code;
 
+        //insertion du prix récupéré du catalogue de la saq dans le formulaire
+        document.getElementById("prix_bouteille").value =
+          evt.target.dataset.prix;
+        bouteille.prix.innerHTML = evt.target.dataset.prix;
+        //insertion du code saq dans le formulaire
+        bouteille.code.innerHTML = evt.target.dataset.code;
         liste.innerHTML = "";
         inputNomBouteille.value = "";
+
+        /* Vérification si la bouteille se trouve déja dans le cellier
+         *   Si oui un message en informe l'usager
+         */
+        var paramSAQ = {
+          id_cellier: bouteille.nom.dataset.id_cellier,
+          id_bouteille: bouteille.nom.dataset.id,
+          code_saq: document.querySelector("[name='code_saq']").innerHTML,
+        };
+        // console.log("PARAM SAQ", paramSAQ);
+        let requete = new Request(BaseURL + "index.php?requete=infoCodeSaq", {
+          method: "POST",
+          body: JSON.stringify(paramSAQ),
+        });
+        // console.log("REQUETE", requete);
+        fetch(requete)
+          .then((response) => {
+            // console.log("RESPONSE", response);
+            if (response.status === 200) {
+              return response.json();
+            } else {
+              throw new Error("Erreur");
+            }
+          })
+          .then((response) => {
+            //affichage du message si la bouteille se trouve déja dans le cellier
+            if (response.data !== true) {
+              document.getElementById("messageSAQ").innerHTML =
+                "Cette bouteille est déja dans votre cellier seul la quantité sera ajustée.<br>Aller dans modifier pour changer d'autres infos.";
+            }
+          })
+          .catch((error) => {
+            document.getElementById("messageSAQ").innerHTML = "";
+            console.error(error);
+          });
       }
     });
 
@@ -187,15 +224,16 @@ window.addEventListener("load", function () {
           date_achat: bouteille.date_achat.value,
           garde_jusqua: bouteille.garde_jusqua.value,
           notes: bouteille.notes.value,
-          prix: bouteille.prix.innerHTML.slice(0, -1),
-          code: bouteille.code.innerHTML,
+          prix: bouteille.prix.value,
           quantite: bouteille.quantite.value,
           millesime: bouteille.millesime.value,
         };
-        console.log(param);
         let requete = new Request(
           BaseURL + "index.php?requete=ajouterNouvelleBouteilleCellier",
-          { method: "POST", body: JSON.stringify(param) }
+          {
+            method: "POST",
+            body: JSON.stringify(param),
+          }
         );
 
         let modal = document.querySelector(".modal");
@@ -234,7 +272,7 @@ window.addEventListener("load", function () {
           .catch((error) => {
             console.error(error);
           });
-        //redirect vers le cellier
+
         document
           .querySelector(".retour_cellier")
           .addEventListener("click", (_) => {
@@ -321,6 +359,7 @@ window.addEventListener("load", function () {
         quantite: bouteille.quantite.value,
         millesime: bouteille.millesime.value,
       };
+
       let requete = new Request(
         BaseURL + "index.php?requete=modifierBouteilleCellier",
         { method: "POST", body: JSON.stringify(param) }
@@ -377,7 +416,7 @@ window.addEventListener("load", function () {
   let btnAuthentification = document.querySelector(
     "[name='validerAuthentification']"
   );
-  console.log(btnAuthentification);
+  // console.log(btnAuthentification);
   if (btnAuthentification) {
     btnAuthentification.addEventListener("click", function (evt) {
       document.querySelector(".erreur").innerHTML = "";
@@ -385,9 +424,13 @@ window.addEventListener("load", function () {
         courriel: document.querySelector("[name='courriel']").value,
         mdp: document.querySelector("[name='mdp']").value,
       };
+
       let requete = new Request(
         BaseURL + "index.php?requete=authentification",
-        { method: "POST", body: JSON.stringify(param) }
+        {
+          method: "POST",
+          body: JSON.stringify(param),
+        }
       );
 
       fetch(requete)
@@ -399,25 +442,151 @@ window.addEventListener("load", function () {
           }
         })
         .then((response) => {
+          //la requête à fonctionnée, redirection vers la page du cellier de l'utilisateur connecté :
           if (response.data !== null) {
-            //la requête à fonctionnée, redirection vers la page du cellier de l'utilisateur connecté :
             window.location =
               BaseURL +
               "index.php?requete=afficherCellier&id_utilisateur=" +
               response.data.id_utilisateur;
-            console.log("aller vers le cellier");
+
+            //la requete à fonctionnée mais n'a rien retournée
           } else if (response.data == null && response.erreurs == null) {
-            //la requete à focntionnée mais n'a rien retournée
             document.querySelector(".identifiants_inconnus").innerHTML =
               "Aucun compte utlisateur lié aux identifiants renseignés";
+
+            //il y a des erreurs de validation du formulaire :
           } else if (response.erreurs !== null) {
             document.querySelector(".courriel").innerHTML =
               response.erreurs.courriel || "";
+            document.querySelector(".mdp").innerHTML =
+              response.erreurs.mdp || "";
           }
         })
         .catch((error) => {
           console.error(error);
         });
+    });
+  }
+
+  //Comportement du bouton "créer compte" de la page creeCompte.php :
+  let btnCreerCompte = document.querySelector(".confirmerCompte");
+  if (btnCreerCompte) {
+    btnCreerCompte.addEventListener("click", function (evt) {
+      console.log("click");
+      evt.preventDefault();
+      var utilisateur = {
+        prenom: document.querySelector("[name='prenom']").value,
+        nom: document.querySelector("[name='nom']").value,
+        courriel: document.querySelector("[name='courriel']").value,
+        mdp: document.querySelector("[name='mdp']").value,
+      };
+      let requete = new Request(BaseURL + "index.php?requete=creerCompte", {
+        method: "POST",
+        body: JSON.stringify(utilisateur),
+      });
+
+      fetch(requete)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            throw new Error("Erreur");
+          }
+        })
+        .then((response) => {
+          //si la création de compte s'est bien passée, authentification directe du nouvel utilisateur :
+          if (response.data === true) {
+            var param = {
+              courriel: response.email,
+              mdp: response.mdp,
+            };
+            let requete2 = new Request(
+              BaseURL + "index.php?requete=authentification",
+              { method: "POST", body: JSON.stringify(param) }
+            );
+            return fetch(requete2);
+
+            //affichage des erreurs renvoyées par la vérification des données du formulaire :
+          } else if (response.erreurs != null) {
+            document.querySelector(".prenom").innerHTML =
+              response.erreurs.prenom || "";
+            document.querySelector(".nom").innerHTML =
+              response.erreurs.nom || "";
+            document.querySelector(".courriel").innerHTML =
+              response.erreurs.courriel || "";
+            document.querySelector(".mdp").innerHTML =
+              response.erreurs.mdp || "";
+
+            //affichage d'une erreur si le courriel est déjà dans la base de données :
+          } else if (response.existant != null) {
+            document.querySelector(".resultat").innerHTML =
+              "Il existe déjà un compte utilisateur lié à ce courriel" || "";
+          }
+          console.log(response);
+        })
+        .then((response2) => {
+          console.log(response2);
+          //si l'authentification du nouvel utilisateur s'est bien passée, redirection vers la page d'accueil (son cellier)
+          if (response.status === 200) {
+            window.location.href = BaseURL;
+          } else {
+            throw new Error("Erreur");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  }
+  /* Comportement du bouton "supprimer" sur la page de cellier */
+  document.querySelectorAll(".btnSupprimer").forEach(function (element) {
+    element.addEventListener("click", function (evt) {
+      console.log("btn supprimer");
+
+      let id = evt.target.parentElement.dataset.id;
+      let requete = new Request(
+        BaseURL + "index.php?requete=supprimerBouteille",
+        {
+          method: "DELETE",
+          body: '{"id": ' + id + "}",
+        }
+      );
+      // Ajouter une confirmation pour la suppression
+      let resultat = confirm("Voulez vraiment supprimer cette bouteille?");
+      if (resultat === true) {
+        fetch(requete)
+          .then((response) => {
+            if (response.status === 200) {
+              console.log(response.status);
+              console.log("suppression effectuée");
+              window.location.href = BaseURL;
+              return response.json();
+            } else {
+              throw new Error("Erreur");
+            }
+          })
+          .then((response) => {
+            console.debug(response);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        window.location.href = BaseURL;
+        console.log("suppression non effectuée");
+        evt.preventDefault();
+      }
+    });
+  });
+
+  //Évenement lié à la bulle info sur la page ajouter et modifier une bouteille
+  // Ajoute la classe apparait pour rendre la bulle visible
+
+  let bulle = document.querySelector(".remplir_Champs");
+  if (bulle) {
+    bulle.addEventListener("click", function () {
+      let info = document.getElementById("fenetre_info");
+      info.classList.toggle("apparait");
     });
   }
 });

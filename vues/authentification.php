@@ -13,25 +13,58 @@
     <link rel="stylesheet" href="./css/main.css" type="text/css" media="screen">
     <base href="<?php echo BASEURL; ?>">
     <script src="./js/main.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link href="https://fonts.googleapis.com/css2?family=Bentham&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Patua+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Patua+One&family=Syne&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <header>
-        <h1>Un petit verre de vino ?</h1>
-    </header>
-    <main>
-    <div class="authentification">
 
-        <div vertical layout>
-            <div>
-                <p>Courriel : <input name="courriel" type="email"></p>
-                <span class="erreur courriel"></span>
-                <p>Mot de passe : <input name="mdp" type="password"></p>
-                <span class="erreur identifiants_inconnus"></span>
-            </div>
-            <button name="validerAuthentification">Valider</button>
-            <a href="?requete=creerCompte">Créer un compte</a>
+
+    <header class="header">
+        <aside>
+
+
+
+        </aside>
+
+
+
+
+        <div class="logo_nav connexion">
+            <a href="?requete=accueil" class="logo"><img src="./images/logo_vino.png"></a>
         </div>
-    </div>
+        <!--             <h1>Un petit verre de vino ?</h1>-->
+
+    </header>
+    <main id="authentification">
+        <div class="authentification">
+
+            <div class=info_utilisateur vertical layout>
+
+                <div class="form">
+                    <p class="titre_connexion">Connexion au compte <br>
+                        <span>* Champs obligatoires</span></p>
+                    <p class="message">Nouvel utilisateur?<a href="?requete=ajouterNouvelUtilisateur"> Créer un compte</a></p>
+                    <form class="authentification-form" method="post">
+                        <p><label>Courriel *</label><br>
+
+                            <input type="email" id="courriel" name="courriel" placeholder="courriel" required value="<?= $_SESSION['courriel_creation_compte'] ?? '' ?>" /></p>
+                        <span class="erreur courriel"></span>
+
+                        <p><label>Mot de passe *</label><br>
+                            <input type="password" name="mdp" placeholder="Mot de passe" required /></p>
+                        <span class="erreur mdp"></span>
+
+                        <span class="erreur identifiants_inconnus"></span>
+                    </form>
+
+                    <button name="validerAuthentification">Valider</button>
+
+
+                </div>
+            </div>
+        </div>
     </main>
 </body>

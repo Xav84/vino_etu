@@ -54,6 +54,11 @@ class Controler
 				break;
 			case 'deconnexion':
 				$this->deconnexion();
+			case 'supprimerBouteille':
+				$this->supprimerBouteille();
+				break;
+			case 'infoCodeSaq':
+				$this->getCodeSaq();
 				break;
 			default:
 				$this->accueil();
@@ -76,14 +81,48 @@ class Controler
 	}
 
 	/**
-	 * Affiche la page de création d'un compte
+	 * Affiche la page de création d'un compte et ajout d'un utilisateur à la base de donnée
 	 * @return files
 	 */
 	private function creerCompte()
 	{
-		// pas d'inclusion de l'entete car on ne veut pas avoir accès au menu
-		include("vues/creerCompte.php");
-		include("vues/pied.php");
+
+
+		$body = json_decode(file_get_contents('php://input'));
+
+
+		if (!empty($body)) {
+			$utilisateur = new Utilisateurs();
+			$resultat = $utilisateur->ajouterUtilisateur($body);
+			echo json_encode($resultat);
+		} else {
+			// pas d'inclusion de l'entete car on ne veut pas avoir accès au menu
+			include("vues/creerCompte.php");
+			include("vues/pied.php");
+		}
+	}
+
+	/**
+	 * Affiche la page de création d'un compte et ajout d'un utilisateur à la base de donnée
+	 * @return files
+	 */
+	private function getCodeSaq()
+	{
+
+
+		$body = json_decode(file_get_contents('php://input'));
+
+
+		if (!empty($body)) {
+			$bte = new Bouteille();
+			$resultat = $bte->trouverCodeSaq($body);
+			echo json_encode($resultat);
+		} else {
+
+			include("vues/entete.php");
+			include("vues/cellier.php");
+			include("vues/pied.php");
+		}
 	}
 
 	/**
@@ -287,5 +326,19 @@ class Controler
 		session_unset();
 		session_destroy();
 		$this->controllerUtilisateur();
+	}
+
+	/**
+	 * Récupère l'id de la bouteille à supprimer et déclenche la requete sql de suppression.
+	 * @return json
+	 */
+	private function supprimerBouteille()
+	{
+
+
+		$body = json_decode(file_get_contents('php://input'));
+		$bte = new Bouteille();
+		$resultat = $bte->supprimerBouteilleCellier($_GET['id'], $_GET['cellier']);
+		echo json_encode($resultat);
 	}
 }

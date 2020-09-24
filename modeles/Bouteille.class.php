@@ -318,6 +318,34 @@ class Bouteille extends Modele
 	}
 
 	/**
+	 * Cette méthode retourne un code SAQ d une bouteile contenue dans un cellier 
+	 * 
+	 * @return Array $rows contenant la bouteille.
+	 */
+	public function trouverCodeSaq($data)
+	{
+		$requete = 'SELECT
+								c.vino__cellier_id,
+								c.vino__bouteille_id,
+								b.code_saq,
+								b.id
+							
+							FROM ' . self::CELLIER_BOUTEILLE . ' c
+							INNER JOIN ' . self::BOUTEILLE . ' b ON c.vino__bouteille_id = b.id
+							WHERE b.code_saq =' . $data->code_saq . ' AND c.vino__cellier_id=' . $data->id_cellier;
+
+		if (($res = $this->_db->query($requete)) ==     true) {
+			if ($res->num_rows) {
+				$row = $res->fetch_assoc();
+			}
+		} else {
+			throw new Exception("Erreur de requête sur la base de donnée", 1);
+			//$this->_db->error;
+		}
+		return $row;
+	}
+
+	/**
 	 * Cette méthode permet de retourner les résultats de recherche pour la fonction d'autocomplete de l'ajout des bouteilles dans le cellier
 	 * 
 	 * @param string $nom La chaine de caractère à rechercher
@@ -476,6 +504,7 @@ class Bouteille extends Modele
 		}
 
 		/* millesime */
+
 		if ($data->millesime !== "" && !preg_match('/^\d{4}$/', $data->millesime)) {
 			$this->erreurs['millesime'] = "Veuillez entrer une année à 4 chiffres.";
 		}
@@ -509,7 +538,7 @@ class Bouteille extends Modele
 	 * 
 	 * @param Object $data Tableau des données représentants la bouteille.
 	 * 
-	 * @return Boolean Succès ou échec de l'ajout.
+	 * @return Array contenant la retour de la requete SQL ($reponse['data']) et les éventuelles erreurs de formulaire $reponse['erreurs].
 	 */
 	public function ajouterBouteilleCellier($data)
 	{
@@ -522,12 +551,16 @@ class Bouteille extends Modele
 		}
 
 		/* garde_jusqu'à */
-		if ($data->garde_jusqua !== "" && !preg_match('/^\d{4}$/', $data->garde_jusqua)) {
+
+		if ($data->garde_jusqua !== '' && !preg_match('/^\d{4}$/', $data->garde_jusqua)) {
+
 			$this->erreurs['garde_jusqua'] = "Veuillez entrer l'année jusqu'à laquelle vous pouvez garder cette bouteille.";
 		}
 
 		/* validation notes : */
-		if ($data->notes !== "" && !preg_match('/^.{1,200}$/', $data->notes)) {
+
+		if ($data->notes !== '' && !preg_match('/^.{1,200}$/', $data->notes)) {
+
 			$this->erreurs['notes'] = "Veuillez entrer un commentaire sur le vin de 200 caractères au maximum.";
 		}
 
@@ -551,24 +584,12 @@ class Bouteille extends Modele
 
 		if (empty($this->erreurs)) {
 			//requete pour vérifier si la bouteille à ajouter n'est pas déjà au cellier :
-			$sql = "SELECT 
-								c.vino__cellier_id, 
-								c.vino__bouteille_id,
-								b.id,
-								b.code_saq
-								FROM cellier__bouteille c
-								INNER JOIN vino__bouteille b
-								WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille . " AND code_saq =" . $data->code;
-
-
-			// $sql = "SELECT vino__cellier_id, vino__bouteille_id FROM " . self::CELLIER_BOUTEILLE . " WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille;
+			$sql = "SELECT vino__cellier_id, vino__bouteille_id FROM " . self::CELLIER_BOUTEILLE . " WHERE vino__cellier_id = " . $data->id_cellier . " AND vino__bouteille_id =" . $data->id_bouteille;
 
 			//Si la bouteille est déjà au cellier, on incrémente seulement sa quantité, sinon on créé un nouvelle référence au cellier :
 			if ($this->_db->query($sql)->num_rows > 0) {
-
 				$reponse['data'] = $this->modifierQuantiteBouteilleCellier($data->id_bouteille, $data->id_cellier, $data->quantite);
 			} else {
-
 				$requete = "INSERT INTO " . self::CELLIER_BOUTEILLE . " (vino__cellier_id,vino__bouteille_id,date_achat,garde_jusqua,notes,prix,quantite,millesime) VALUES (?,?,?,?,?,?,?,?)";
 				$stmt = $this->_db->prepare($requete);
 				$stmt->bind_param('iisisdii', $data->id_cellier, $data->id_bouteille, $data->date_achat, $data->garde_jusqua, $data->notes, $data->prix, $data->quantite, $data->millesime);
@@ -577,6 +598,7 @@ class Bouteille extends Modele
 		} else {
 			$reponse['erreurs'] = $this->erreurs;
 		}
+
 		return $reponse;
 	}
 
@@ -599,6 +621,28 @@ class Bouteille extends Modele
 			$res = $this->_db->query($requete);
 
 			return $res;
+		}
+	}
+
+	/**
+	 * Cette méthode supprime une bouteille selon l'id dans le cellier
+	 * 
+	 * @param int $id id de la bouteille
+	 * 
+	 * @return Boolean Succès ou échec de la suppression.
+	 */
+	public function supprimerBouteilleCellier($id, $cellier)
+	{
+
+		$requete = "DELETE FROM " . self::CELLIER_BOUTEILLE . " WHERE vino__bouteille_id =" . $id . " AND vino__cellier_id =" . $cellier;
+
+		if ($stmt = $this->_db->prepare($requete)) {
+			$stmt->execute();
+			return true;
+		} else {
+			//   var_dump($this->_db->error);
+
+			return false;
 		}
 	}
 }
