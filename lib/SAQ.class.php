@@ -29,6 +29,8 @@ class SAQ extends Modele
 		}
 	}
 
+	// MODIF XAVIER
+
 	/**
 	 * getProduits
 	 * Cette méthode retourne le nombre de bouteilles importées. 
@@ -37,10 +39,24 @@ class SAQ extends Modele
 	 * @return int $i le nombre de bouteilles importées.
 	 */
 
-	public function getProduits($nombre = 24, $page = 1)
+	public function getProduits($nombre, $page)
 	{
 		$s = curl_init();
-		$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=1&product_list_limit=96&product_list_order=name_asc";
+		switch ($nombre) {
+			case 24:
+				$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=2&product_list_limit=24&product_list_order=name_asc";
+				break;
+			case 48:
+				$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=2&product_list_limit=48&product_list_order=name_asc";
+				break;
+			case 96:
+				$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=2&product_list_limit=96&product_list_order=name_asc";
+				break;
+			default:
+				$url = "https://www.saq.com/fr/produits/vin/vin-rouge?p=2&product_list_limit=24&product_list_order=name_asc";
+				break;
+		}
+
 		curl_setopt($s, CURLOPT_URL, $url);
 		curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
 		//curl_setopt($s, CURLOPT_FOLLOWLOCATION, 1);
@@ -52,13 +68,17 @@ class SAQ extends Modele
 		$doc = new DOMDocument(); //instanciation de la classe DOMDocument()
 		$doc->recover = true;
 		$doc->strictErrorChecking = false;
-		//@$doc->loadHTML(self::$_webpage); //chargement du code html de la page web
-		@$doc->loadHTML(file_get_contents($url));
 
+		@$doc->loadHTML(file_get_contents($url)); //chargement du code html de la page web
+
+		//@$doc -> loadHTML(self::$_webpage);
 		$elements = $doc->getElementsByTagName("li"); //Création de l'objet contenant la liste des 
 		//éléments li
 		$i = 0;
 
+		echo "<ul class='listeImportation'>";
+		echo "<strong>Nombre de bouteille à importer :" . $nombre . "<br>";
+		echo "<br>";
 		foreach ($elements as $key => $noeud) {
 			//var_dump($noeud -> getAttribute('class')) ;
 
@@ -67,23 +87,21 @@ class SAQ extends Modele
 
 				//echo $this->get_inner_html($noeud);
 				$info = self::recupereInfo($noeud);
-				echo "<p>" . $info->nom;
+
+				echo "<li>" . $info->nom;
 				$retour = $this->ajouteProduit($info);
 				echo "<br>Code de retour : " . $retour->raison . "<br>";
 				if ($retour->succes == false) {
-					echo "<pre>";
-					// var_dump($info);
-					echo "</pre>";
 					echo "<br>";
 				} else {
 					$i++;
 				}
-				echo "</p>";
 			}
 		}
 
 		return $i;
 	}
+	// FIN MODIFS
 
 	/**
 	 * get_inner_html
