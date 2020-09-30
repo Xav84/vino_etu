@@ -1,23 +1,31 @@
 <div class="cellier">
     <header>
+
+
+
         <!-- Recherche dans le celier -->
-        <form id="recherche_cellier" method="post">
+        <form id="recherche" method="post">
             <div class="rechercheBouteilleCellier" vertical layout>
-                <input type="text" placeholder="nom, pays ou id" class="nom_bouteille_cellier" name="nom_bouteille_cellier">
+
+                <input type="text" class="nom_bouteille_cellier" name="nom_bouteille_cellier" placeholder="id, nom, pays " value="">
                 <button type="submit" name="recherche" value="Rechercher"><i class="fa fa-search"></i></button>
                 <ul class="listeAutoCompleteCellier">
                 </ul>
-
+            </div>
         </form>
+
+
     </header>
     <div class="tri_cellier">
+
         <form id="tri" method="post">
+
             <?php
             //Vérifie si un champs de tri "type" a déja été appliqué
             //Si oui le laisse sélectionné au submit ou refresh
             if (isset($_POST["type"])) {
             ?>
-                <label>Type</label>
+
                 <select name="type">
 
                     <option <?php if (!(strcmp("nom", $_POST["type"]))) {
@@ -35,15 +43,12 @@
                     <option <?php if (!(strcmp("date_achat", $_POST["type"]))) {
                                 echo "selected=\"selected\"";
                             } ?>value="date_achat">Date d'achat</option>
-                    <option <?php if (!(strcmp("prix", $_POST["type"]))) {
-                                echo "selected=\"selected\"";
-                            } ?>value="prix">Prix</option>
                 </select>
             <?php
                 //Si aucun champs sélectionné 
             } else {
             ?>
-                <label>Type</label>
+
                 <select name="type">
                     <option value="" disabled selected>Choisir un tri</option>
                     <option value="nom">Nom</option>
@@ -51,7 +56,6 @@
                     <option value="type">Type de vin</option>
                     <option value="quantite">Quantité</option>
                     <option value="date_achat">Date d'achat</option>
-                    <option value="prix">Prix</option>
                 </select>
             <?php
             }
@@ -82,16 +86,19 @@
             <?php
             }
             ?>
-            <input type="submit" name="tri" value="Triez">
+            <input type="submit" name="tri" value="Triez"></form>
     </div>
-
+    <h2>Cellier</h2>
     <div class="container_bouteille">
-
         <?php
         if ($data == null) {
-        ?><h4>La recherche n'a donnée aucun résultat</h4>
+        ?><h4>Aucune bouteille trouvée</h4>
+
         <?php
-        }
+        } ?>
+
+
+        <?php
         foreach ($data as $cle => $bouteille) {
         ?>
             <div class="container_bouteille">
@@ -118,7 +125,7 @@
 
 
                                 <p class="date_achat"><i class='far fa-calendar-alt'></i> <?php echo  $bouteille['date_achat'] ?></p>
-                                <!-- <p class="prix"><i class='fas fa-dollar-sign'></i> <?php echo  $bouteille['prix'] ?></p> -->
+
                                 <p><a href="<?php echo  $bouteille['url_saq'] ?>"><i class="fas fa-external-link-square-alt"></i> Voir SAQ</a></p>
                             </div>
                         </div>
