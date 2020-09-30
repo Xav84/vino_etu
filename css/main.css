@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 /********
  * Votre CSS
  ********/
@@ -13,15 +17,28 @@ a:link {
   text-decoration: none;
 }
 
+/*Réduir la taille des font awsomes*/
+i {
+  width: 15px;
+  margin-right: 20px;
+}
+
+/*Titre dans catalogue et cellier*/
+h2 {
+  color: white;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.597);
+}
+
 /* Retirer les lignes sur 
-tous les liens de navigation */
+	tous les liens de navigation */
 .logo_nav a,
 .nav a {
   text-decoration: none;
 }
 
 /* Établir une marge intérieure
-qui aligne mieux les puces */
+	qui aligne mieux les puces */
 ul {
   padding-left: 1rem;
 }
@@ -31,14 +48,11 @@ ul > * + * {
   margin-top: 10px;
 }
 
-/*---------------------------------------*/
-
 /* Structure */
-/* Marges, dimensions, positionnement */
+/* Marges, dimensions, positionnement, style */
 
 html,
 body {
-  background-color: #f5f2f2;
   font-family: "Roboto", "RobotoDraft", sans-serif;
   font-size: 95%;
   width: 100%;
@@ -47,20 +61,24 @@ body {
   display: flex;
   flex-wrap: wrap;
   height: 100%;
+  backdrop-filter: <filter-function> [<filter-function>] * | none;
+  background: url("../images/tree-4599374_1920.jpg");
+  align-items: stretch;
 }
 
 body {
   margin: 0;
+  height: 100%;
 }
 
 /* Retirer les marges par défaut 
-pour tous les enfants de toute entête. */
+	pour tous les enfants de toute entête. */
 .header > * {
   margin: 0;
 }
 
 /* Assurer que les éléments choisis
-occupent seuls toute leur rangée/ligne */
+	occupent seuls toute leur rangée/ligne */
 body > header,
 body > nav,
 body > footer {
@@ -69,7 +87,7 @@ body > footer {
 }
 
 /* enlever les espaces entre les éléments 
-à cause de inline-block */
+	à cause de inline-block */
 body > nav > ul {
   display: flex;
   align-items: center;
@@ -101,29 +119,28 @@ body > nav > ul {
   font-size: 1.1rem;
 }
 
-/*donner une taille a l'icone mon compte */
+/*donner une taille à l'icone mon compte */
 .header aside i {
   font-size: 22px;
   color: white;
 }
 
+/* Permettre l'occupation totale de l'espace
+		sur fenêtre moyenne ou étroite */
 body > main {
-  /* Permettre l'occupation totale de l'espace
-  sur fenêtre moyenne ou étroite */
   flex-grow: 1;
-  background: url("../images/tree-4599374_1920.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   padding-bottom: 50px;
 }
 
 /* Rythme pour les sections de la
-navigation principale */
+	navigation principale */
 body > nav > * + * {
   margin-top: 10px;
 }
 
-/*style  et allignement nav*/
+/*style  et allignement de la barre de navigation*/
 .nav {
   text-align: right;
   height: 50px;
@@ -135,15 +152,19 @@ body > nav > * + * {
   margin: 10px 30px 0 0;
 }
 
+a {
+  color: black;
+}
+
 .menu li a {
   clear: right;
   text-decoration: none;
-  color: gray;
   margin: 0 10px;
   line-height: 70px;
   font-family: "Patua One", cursive;
   font-size: 1.2rem;
   border-color: white;
+  color: black;
 }
 
 .menu li a:hover {
@@ -172,7 +193,7 @@ label {
   display: none;
 }
 
-/*style nav logo*/
+/*style de la barre de navigation et du logo*/
 
 .logo_nav {
   background-color: #c79169;
@@ -181,7 +202,7 @@ label {
   display: flex;
 }
 
-/*logo*/
+/* allignement du logo*/
 .logo_nav a > img {
   margin-top: 60px;
   align-content: flex-start;
@@ -191,9 +212,11 @@ label {
   margin-top: -15px;
 }
 
-/*cellier*/
+/***********************************/
+/**********Page cellier*************/
+/***********************************/
 
-/*positionnement du champs recherche*/
+/*Positionnement du champs de recherche*/
 
 body > main > div > header {
   width: 100%;
@@ -203,6 +226,7 @@ body > main > div > header {
   justify-content: flex-end;
   flex-wrap: wrap;
   height: 40px;
+  flex-shrink: 0;
 }
 
 /*Positionnement des informations et l'image des bouteilles*/
@@ -211,6 +235,7 @@ main .bouteille {
   margin: auto;
   margin-top: 20px;
   background-color: #faf7eb;
+  padding-bottom: 10px;
 }
 
 /* Retirer toutes les marges par défaut */
@@ -219,7 +244,7 @@ main .bouteille {
 }
 
 /* Créer un espace pour l'image de la vignette
-et la flotter à la gauche.*/
+	et la flotter à la gauche.*/
 .img {
   width: 180px;
   height: 180px;
@@ -239,6 +264,7 @@ et la flotter à la gauche.*/
   /*enlever le fond blanc des bouteilles*/
   mix-blend-mode: multiply;
   margin: auto;
+  max-height: 180px;
 }
 
 /* Forcer le parent à clairer l'image flottante */
@@ -249,7 +275,7 @@ et la flotter à la gauche.*/
 }
 
 /* Réduire la taille de caractères de base
-pour affecter tous les éléments */
+	pour affecter tous les éléments */
 .vignette {
   font-size: 0.8em;
   max-width: 50em;
@@ -307,10 +333,6 @@ pour affecter tous les éléments */
   flex-basis: 80%;
 }
 
-button a:visited {
-  color: white !important;
-}
-
 /*Style des bouttons*/
 .options button {
   border: none;
@@ -339,14 +361,15 @@ button a:visited {
 }
 
 /*Style du boutton de recherche dans le cellier*/
-#recherche_cellier input[name="nom_bouteille_cellier"] {
+#recherche input[name="nom_bouteille_cellier"],
+#recherche input[name="nom_bouteille_catalogue"] {
   padding: 10px;
   border: none;
   font-family: "Bentham", serif;
   font-size: 16px;
 }
 
-#recherche_cellier button {
+#recherche button {
   padding: 10px;
   border-left: none;
   cursor: pointer;
@@ -355,15 +378,16 @@ button a:visited {
   border: none;
 }
 
-#recherche_cellier {
+#recherche {
   box-sizing: border-box;
   padding: 5px;
   margin-top: 15px;
   margin-right: 30px;
 }
 
-/*liste recherche autocomplte*/
-.cellier .listeAutoComplete {
+/*style et positionnement de la liste recherche autocomplte*/
+.cellier .listeAutoComplete,
+.listeAutoCompleteCatalogue {
   width: 300px;
   background-color: #1d1d1d;
   text-align: center;
@@ -388,7 +412,7 @@ button a:visited {
   text-align: center;
 }
 
-/*formulaire de  tri*/
+/* style et positionnement du formulaire de  tri*/
 
 .tri_cellier {
   display: flex;
@@ -439,16 +463,20 @@ input[name="tri"] {
   padding-left: 20px;
 }
 
-/*Footer*/
+/*Style et positionnement du Footer*/
 footer {
   display: flex;
-  bottom: 0px;
+  margin-bottom: 0px !important;
   width: 100%;
   padding-top: 20px;
   justify-content: center;
   background-color: #0d0d0d;
   color: #ece4cc;
-  height: 50px;
+  align-self: flex-end;
+}
+
+footer a {
+  color: white;
 }
 
 footer p {
@@ -457,12 +485,13 @@ footer p {
   font-size: 10px;
 }
 
-/*texte en cas d'erreur sur un champs*/
+/*Texte en cas d'erreur sur un champs*/
 .erreur {
   color: red;
   text-align: center;
 }
 
+/*Style du modal*/
 .modal {
   display: none;
   position: fixed;
@@ -524,7 +553,7 @@ p.msg_sql {
 }
 
 /*Style du boutton de recherche*/
-#recherche_catalogue input[name="nom_bouteille"] {
+#recherche_ajout input[name="nom_bouteille"] {
   padding: 10px;
   padding-right: 25px;
   margin-right: 10px;
@@ -536,7 +565,7 @@ p.msg_sql {
   background-repeat: no-repeat;
 }
 
-#recherche_catalogue {
+#recherche_ajout {
   width: 97%;
   padding: 10px;
   display: flex;
@@ -549,7 +578,7 @@ p.msg_sql {
   font-size: 20px;
 }
 
-/*conteneur formulaire d'ajout d'une nouvelle bouteille*/
+/*Style et positionnement du conteneur formulaire d'ajout d'une nouvelle bouteille*/
 #ajouter_une_bouteille {
   display: flex;
   flex-direction: column;
@@ -609,6 +638,7 @@ input[type="number"] {
   padding-top: 5px;
 }
 
+/*Champs obligatoires*/
 #ajouter_une_bouteille p:first-of-type span {
   font-size: 12px;
   color: gray;
@@ -620,7 +650,7 @@ input[type="number"] {
   font-size: 18px;
 }
 
-/*Style et positionnement bouton Ajouter bouteille*/
+/*Style et positionnement du bouton Ajouter bouteille*/
 #ajouter_une_bouteille button[name="ajouterBouteilleCellier"] {
   box-sizing: border-box;
   background: #c79169;
@@ -647,24 +677,28 @@ input[type="number"] {
   padding-right: 5px;
   position: absolute;
   z-index: 9999;
-  top: 350px;
+  top: 370px;
+  right: 25%;
   overflow: auto;
-  right: 100px;
   cursor: pointer;
 }
 
-.ajouter .listeAutoComplete li {
+.ajouter .listeAutoComplete li,
+.catalogue .listeAutoCompleteCatalogue li,
+.cellier .listeAutoCompleteCellier li {
   color: #ffffff;
   text-decoration: none;
   list-style-type: square !important;
   list-style-position: inside;
 }
 
-.ajouter .listeAutoComplete li a {
+.ajouter .listeAutoComplete li a,
+.catalogue .listeAutoCompleteCatalogue li a,
+.cellier .listeAutoCompleteCellier li a {
   font-family: "Bentham", serif;
 }
 
-/*Bulle Infos*/
+/*Style et positionnement de la bulle Infos*/
 
 .remplir_Champs {
   position: relative;
@@ -692,10 +726,14 @@ input[type="number"] {
   left: 70%;
 }
 
+#messageSAQ {
+  text-align: center;
+  color: rgb(25, 111, 240);
+}
+
 /* ajouter cette classe avec son style lors du clique*/
 .apparait {
   visibility: visible !important;
-
   -webkit-animation: fadeIn 1s;
   animation: fadeIn 1s;
 }
@@ -721,10 +759,8 @@ input[type="number"] {
   }
 }
 
-/*fin fentre info*/
-
-/***************************************/
-/*Page Modification d'une bouteille*/
+/**************************************/
+/* Page modifier une bouteille*/
 /**************************************/
 
 /*style et positionnement du contenaire formulaire modification d'une bouteille*/
@@ -743,14 +779,12 @@ input[type="number"] {
   padding: 10px;
   justify-content: space-between;
   margin-top: 100px;
-  /*    margin-top: -20px;*/
   padding-top: 30px;
 }
 
 .modifierBouteille p {
   width: 80%;
   margin: auto;
-
   text-align: center;
 }
 
@@ -778,7 +812,7 @@ input[type="number"] {
   font-family: "Patua One", cursive;
   font-weight: bold;
 }
-
+/*Mettre un border bottom pour marquer une séparation*/
 .modifierBouteille p:first-of-type {
   text-align: left;
   font-weight: 100;
@@ -804,14 +838,14 @@ div p:first-of-type {
   font-size: 18px;
 }
 
-/*style du nom de la bouteille a modifier*/
+/*style du nom de la bouteille à modifier*/
 p.nom_bouteille {
   text-align: left !important;
   padding: 5px;
   box-sizing: border-box;
 }
 
-/*Style et positionnement bouton Ajouter bouteille*/
+/*Style et positionnement bouton Modifier bouteille*/
 .modifierBouteille button[name="modifierBouteilleCellier"] {
   box-sizing: border-box;
   background: #c79169;
@@ -831,17 +865,17 @@ p.nom_bouteille {
 /***Page d'authentification*****/
 /******************************/
 
-/*logo*/
+/* Positionnement du logo*/
 .connexion a > img {
   margin-top: 60px;
   align-content: flex-start;
-  width: 51%;
+  max-width: 51%;
   opacity: 1;
   flex-shrink: 0;
   margin-top: -15px;
 }
 
-/*style et positionnement du formulaire d'authentification*/
+/*Style et positionnement du formulaire d'authentification*/
 .info_utilisateur {
   display: flex;
   flex-direction: column;
@@ -882,11 +916,10 @@ p.titre_connexion {
   border-radius: 4px;
   border: 2px solid #c79169;
   margin-top: -30px;
-  /*      margin-left: 30px;*/
 }
 
 .form input[type="password"] {
-  width: 92%;
+  width: 100%;
   padding: 12px;
   border-radius: 4px;
   border: 2px solid #c79169;
@@ -918,7 +951,7 @@ p.titre_connexion {
   color: gray;
 }
 
-/*Style et positionnement nouvel utilisateur*/
+/*Style et positionnement du formulaire créer un nouvel utilisateur*/
 p.message {
   flex-direction: row;
   margin-bottom: 30px;
@@ -959,7 +992,7 @@ p.message {
 /****Page Créer un compte****/
 /****************************/
 
-/*logo*/
+/* Positionnement du logo*/
 .connexion a > img {
   margin-top: 60px;
   align-content: flex-start;
@@ -996,7 +1029,7 @@ p.message {
   width: 80%;
   align-self: center;
 }
-
+/*Titre du formulaire*/
 .creer-compte h1 {
   border-bottom: 3px double !important;
   font-family: "Bentham", serif;
@@ -1013,7 +1046,7 @@ p.message {
 }
 
 .creer-compte input[type="password"] {
-  width: 92%;
+  width: 100%;
   padding: 12px;
   border-radius: 4px;
   border: 2px solid #c79169;
@@ -1060,6 +1093,7 @@ p.message {
   font-family: "Bentham", serif;
   font-size: 18px;
 }
+
 .confirmer a {
   font-weight: bold;
   font-family: "Bentham", serif;
@@ -1086,10 +1120,58 @@ p.message {
   width: 100%;
 }
 
-/************************/
-/**Version Mobile********/
+/********************************/
+/*********Page Catalogue********/
+/******************************/
 
-@media only screen and (max-width: 44em) {
+/*Style et positionnement de la liste recherche autocomplte*/
+.ajouter .listeAutoComplete,
+.catalogue .listeAutoCompleteCatalogue,
+.cellier .listeAutoCompleteCellier {
+  width: 300px;
+  background-color: #1d1d1d;
+  text-align: center;
+  position: absolute;
+  border-radius: 5px;
+  z-index: 1;
+  top: 185px;
+  overflow: auto;
+  right: 22px;
+  cursor: pointer;
+}
+
+.catalogue .listeAutoComplete li {
+  color: #ffffff;
+  text-decoration: none;
+  list-style-type: square !important;
+  list-style-position: inside;
+}
+
+.catalogue .listeAutoComplete li a {
+  font-family: "Bentham", serif;
+  text-align: center;
+}
+
+/* MODIFS XAVIER */
+/***********************************/
+/**********Page importation*************/
+/***********************************/
+
+.listeImportation {
+  background-color: grey;
+  color: white;
+  max-width: 75%;
+  text-align: center;
+  list-style-type: none;
+  margin: auto;
+}
+
+/*****************************/
+/******Version Mobile********/
+/****************************/
+
+@media only screen and (max-width: 600px) {
+  /* *****Entete******/
   label {
     display: block;
     cursor: pointer;
@@ -1116,8 +1198,8 @@ p.message {
     display: block;
     border-bottom: 1px solid white;
     margin: 0;
-
-    color: white;
+    font-size: 1em;
+    color: black;
   }
 
   .menu li a :hover {
@@ -1133,26 +1215,41 @@ p.message {
     width: 85%;
   }
 
-  /* Page Cellier*/
+  /**************************/
+  /*******Page Cellier*******/
+  /**************************/
 
+  /*formulaire de  tri*/
+
+  select {
+    flex-basis: calc(20% - 10px) !important;
+  }
+
+  /*boutton triez*/
+  input[name="tri"] {
+    flex-basis: calc(20% - 10px) !important;
+  }
+
+  /*Réajustement des informations de la bouteille*/
   .description {
     flex-wrap: wrap;
   }
 
   .description_colunne2 {
-    width: 40%;
-    margin-left: 20px;
+    width: 100%;
+    margin-left: 0;
   }
 
   .description_colunne1 {
-    width: 40%;
+    width: 100%;
   }
 
   .description .nom {
-    flex-basis: 80%;
+    flex-basis: 100%;
     font-size: 1.4em;
     margin-bottom: 2px;
-    clear: both;
+    text-align: left;
+    margin-left: -20px;
   }
 
   .description .quantite {
@@ -1164,17 +1261,30 @@ p.message {
     padding-top: 10px;
   }
 
-  /*Page ajouter une nouvelle bouteille*/
+  /*Positionnement des informations et l'image des bouteilles*/
+  main .bouteille {
+    max-width: 30em;
+    height: auto;
+  }
+
+  /*Positionnement des boutons*/
+  .options {
+    text-align: center;
+  }
+
+  /**************************************/
+  /* Page ajouter une nouvelle bouteille*/
+  /**************************************/
 
   #ajouter_une_bouteille {
     max-width: 25rem;
   }
 
-  #recherche_catalogue input[name="nom_bouteille"] {
+  #recherche_ajout input[name="nom_bouteille"] {
     margin-right: 30px;
   }
 
-  #recherche_catalogue {
+  #recherche_ajout {
     margin-top: 100px;
     margin-left: 10px;
   }
@@ -1193,7 +1303,7 @@ p.message {
     box-sizing: border-box;
     padding: 5px;
     display: inline-block;
-    float: left;
+    /* float: left; */
     text-align: left;
     width: 100%;
     margin-top: -6px;
@@ -1207,12 +1317,18 @@ p.message {
   #ajouter_une_bouteille p:first-of-type {
     margin-top: 20px;
   }
+  /*Repositionnement du champ de recherche*/
+  .ajouter .listeAutoComplete {
+    top: 360px;
+    left: 12.5%;
+    right: 0;
+  }
 
-  /* fenetre info */
+  /* Repositionnement de la bulle info */
   .remplir_Champs #fenetre_info {
     width: 300px;
     top: 90%;
-    left: 20%;
+    left: 10%;
   }
 
   .remplir_Champs {
@@ -1220,7 +1336,9 @@ p.message {
     font-size: 18px;
   }
 
-  /*Page de modification d'une bouteille*/
+  /**************************************/
+  /**** Page modifier une bouteille******/
+  /**************************************/
 
   .modifierBouteille {
     max-width: 25rem;
@@ -1244,7 +1362,7 @@ p.message {
     box-sizing: border-box;
     padding: 5px;
     display: inline-block;
-    float: left;
+    /* float: left; */
     text-align: left;
     width: 100%;
     margin-top: -6px;
@@ -1258,11 +1376,11 @@ p.message {
     margin-top: 100px;
   }
 
-  /* fenetre info */
+  /* Repositionnement de la bulle info */
   .remplir_Champs #fenetre_info {
-    width: 300px;
+    width: 250px;
     top: 90%;
-    left: 20%;
+    left: 12.5%;
   }
 
   .remplir_Champs {
@@ -1270,17 +1388,21 @@ p.message {
     font-size: 18px;
   }
 
+  /**************************************/
+  /******Page authentification************/
+  /**************************************/
+
   /*Taille Logo su la page d'authentification*/
   .connexion a > img {
-    width: 52%;
+    max-width: 52%;
   }
 
-  /*    réduire la taille du contenaire du formulaire*/
+  /*réduire la taille du contenaire du formulaire*/
   .info_utilisateur {
     max-width: 25rem;
   }
 
-  /*    réduire la taille du texte*/
+  /*réduire la taille du texte*/
   p.message {
     text-align: left;
     font-size: 1.22em;
@@ -1288,5 +1410,54 @@ p.message {
 
   .creer-compte {
     max-width: 25rem;
+  }
+}
+
+/********************************/
+/*****Version Tablette***********/
+/********************************/
+
+@media only screen and (max-width: 1000px) {
+  /* Entete**/
+  label {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    z-index: 999;
+  }
+
+  /**mettre le menu en premier plan**/
+  .nav {
+    position: relative;
+    z-index: 1;
+  }
+
+  .menu {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    display: none;
+    background-color: rgba(250, 235, 215, 0.8);
+    right: 10px;
+  }
+
+  .menu li a {
+    display: block;
+    border-bottom: 1px solid white;
+    margin: 0;
+    color: black;
+  }
+
+  .menu li a :hover {
+    background-color: #fcf9f9;
+  }
+
+  /*Dérouler le menu par le click sur l'icone*/
+  #toggle:checked + .menu {
+    display: block;
+  }
+
+  .logo_nav a > img {
+    width: 85%;
   }
 }
