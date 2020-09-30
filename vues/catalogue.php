@@ -1,107 +1,145 @@
-<div class="cellier">
-    <form id="tri" method="post">
-        <h2>Catalogue de la SAQ</h2>
-        <h3><strong>Critères de tri :</strong></h3>
-        <?php
-        //Vérifie si un champs de tri "type" a déja été appliqué
-        //Si oui le laisse sélectionné au submit ou refresh
+<div class="catalogue">
+    <header>
+        <form id="recherche" method="post">
+            <div class="rechercheBouteilleCatalogue" vertical layout>
 
-        if (isset($_POST["type"])) {
-        ?>
-            <label>Type</label>
-            <select name="type">
+                <input type="text" class="nom_bouteille_catalogue" name="nom_bouteille_catalogue" placeholder="id,nom, pays " value="">
+                <button type="submit" name="recherche" value="Rechercher"><i class="fa fa-search"></i></button>
+                <ul class="listeAutoCompleteCatalogue">
+                </ul>
+            </div>
+        </form>
 
-                <option <?php if (!(strcmp("nom", $_POST["type"]))) {
-                            echo "selected=\"selected\"";
-                        } ?>value="nom">Nom</option>
-                <option <?php if (!(strcmp("pays", $_POST["type"]))) {
-                            echo "selected=\"selected\"";
-                        } ?>value="pays">Pays</option>
-                <option <?php if (!(strcmp("type", $_POST["type"]))) {
-                            echo "selected=\"selected\"";
-                        } ?>value="type">Type de vin</option>
-                <option <?php if (!(strcmp("prix_saq", $_POST["type"]))) {
-                            echo "selected=\"selected\"";
-                        } ?>value="prix_saq">Prix</option>
-            </select>
-        <?php
-            //Si aucun champs sélectionné 
-        } else {
-        ?>
-            <label>Type</label>
-            <select name="type">
-                <option value="" disabled selected>Choisir un tri</option>
-                <option value="nom">Nom</option>
-                <option value="pays">Pays</option>
-                <option value="type">Type de vin</option>
-                <option value="prix_saq">Prix</option>
-            </select>
-        <?php
-        }
-        //Vérifie si un champs de tri "ordre" a déja été appliqué
-        //Si oui le laisse sélectionné au submit ou refresh
-        if (isset($_POST["ordre"])) {
-        ?>
-            <label>Ordre</label>
-            <select name="ordre">
+    </header>
+    <div class="tri_cellier">
+        <form id="tri" method="post">
 
-                <option <?php if (!(strcmp("ASC", $_POST["ordre"]))) {
-                            echo "selected=\"selected\"";
-                        } ?>value="ASC" selected>Croissant</option>
-                <option <?php if (!(strcmp("DESC", $_POST["ordre"]))) {
-                            echo "selected=\"selected\"";
-                        } ?>value="DESC">Décroissant</option>
-            </select>
-        <?php
-            //Si aucun champs sélectionné
-        } else {
-        ?>
-            <label>Ordre</label>
-            <select name="ordre">
+            <?php
+            //Vérifie si un champs de tri "type" a déja été appliqué
+            //Si oui le laisse sélectionné au submit ou refresh
 
-                <option value="ASC" selected>Croissant</option>
-                <option value="DESC">Décroissant</option>
-            </select>
-        <?php
-        }
-        ?>
-        <input type="submit" name="tri" value="Triez">
-    </form>
+            if (isset($_POST["type"])) {
+            ?>
+                <select name="type">
+
+                    <option <?php if (!(strcmp("nom", $_POST["type"]))) {
+                                echo "selected=\"selected\"";
+                            } ?>value="nom">Nom</option>
+                    <option <?php if (!(strcmp("pays", $_POST["type"]))) {
+                                echo "selected=\"selected\"";
+                            } ?>value="pays">Pays</option>
+                    <option <?php if (!(strcmp("type", $_POST["type"]))) {
+                                echo "selected=\"selected\"";
+                            } ?>value="type">Type de vin</option>
+                    <option <?php if (!(strcmp("prix_saq", $_POST["type"]))) {
+                                echo "selected=\"selected\"";
+                            } ?>value="prix_saq">Prix</option>
+                </select>
+            <?php
+                //Si aucun champs sélectionné 
+            } else {
+            ?>
+
+                <select name="type">
+                    <option value="" disabled selected>Choisir un tri</option>
+                    <option value="nom">Nom</option>
+                    <option value="pays">Pays</option>
+                    <option value="type">Type de vin</option>
+                    <option value="prix_saq">Prix</option>
+                </select>
+            <?php
+            }
+            //Vérifie si un champs de tri "ordre" a déja été appliqué
+            //Si oui le laisse sélectionné au submit ou refresh
+            if (isset($_POST["ordre"])) {
+            ?>
+
+                <select name="ordre">
+
+                    <option <?php if (!(strcmp("ASC", $_POST["ordre"]))) {
+                                echo "selected=\"selected\"";
+                            } ?>value="ASC" selected>Croissant</option>
+                    <option <?php if (!(strcmp("DESC", $_POST["ordre"]))) {
+                                echo "selected=\"selected\"";
+                            } ?>value="DESC">Décroissant</option>
+                </select>
+            <?php
+                //Si aucun champs sélectionné
+            } else {
+            ?>
+                <select name="ordre">
+
+                    <option value="ASC" selected>Croissant</option>
+                    <option value="DESC">Décroissant</option>
+                </select>
+            <?php
+            }
+            ?>
+            <input type="submit" name="tri" value="Triez">
+        </form>
 
 
-    <form id="recherche_cellier" method="post">
-        <div class="rechercheBouteilleCellier" vertical layout>
-            <h3><strong>Recherchez dans le catalogue:</strong></h3>
-            <input type="text" placeholder="nom, pays ou code saq" class="nom_bouteille_cellier" name="nom_bouteille_cellier">
-            <input type="submit" name="recherche" value="Rechercher">
-            <ul class="listeAutoCompleteCellier">
-            </ul>
-
-    </form>
+    </div>
+    <h2>Catalogue de la SAQ</h2>
     <!----------------------------->
+    <div class="container_bouteille">
+        <?php
+        if ($data == null) {
+        ?><h4>La recherche n'a donnée aucun résultat</h4>
+        <?php
+        }
+        foreach ($data as $cle => $bouteille) {
+        ?>
 
-    <?php
-    if ($data == null) {
-    ?><h4>La recherche n'a donnée aucun résultat</h4>
-    <?php
-    }
-    foreach ($data as $cle => $bouteille) {
-    ?>
-        <div class="bouteille" data-quantite="">
-            <div class="img">
-                <img src="https:<?php echo $bouteille['image'] ?>">
+            <div class="bouteille" data-quantite="">
+                <article class="vignette">
+
+                    <div class="img">
+                        <img src="https:<?php echo $bouteille['image'] ?>">
+                    </div>
+
+                    <div class="description">
+
+                        <h4 class="nom"><?php echo $bouteille['nom'] ?></h4>
+
+
+                        <div class="description_colunne1">
+                            <p class="pays"><i class='fas fa-flag'></i> <?php echo  $bouteille['pays'] ?></p>
+                            <p class="type"><i class='fas fa-wine-bottle'></i> <?php echo $bouteille['type'] ?></p>
+                            <p class="prix"><i class='fas fa-dollar-sign'></i> <?php echo $bouteille['prix_saq'] ?>$</p>
+
+
+                        </div>
+                        <div class="description_colunne2">
+
+
+                            <p class="format"><i class='fas fa-wine-glass-alt'></i> <?php echo $bouteille['format'] ?></p>
+
+                            <p><a href="<?php echo  $bouteille['url_saq'] ?>"><i class="fas fa-external-link-square-alt"></i> Voir SAQ</a></p>
+                        </div>
+                    </div>
+                    <div class="options" data-id_bouteille="<?php echo $bouteille['id'] ?>">
+                        <!-- MODIFS XAVIER -->
+                        <?php
+                        if ($_SESSION['info_utilisateur']['type_utilisateur'] == 1) {
+                        ?>
+                            <button class='btnModifier'><a href="?requete=modifierBouteilleCellier&id=<?php echo $bouteille['id'] ?>">Modifier</a></button>
+                            <button class='btnSupprimer'><a href="?requete=supprimerBouteille&id=<?php echo $bouteille['id'] ?>">Supprimer</a></button>
+                        <?php
+                        }
+                        ?>
+                    </div>
+
+
+
+                </article>
             </div>
-            <div class="description">
-                <p class="nom">Nom : <?php echo $bouteille['nom'], " " . "[" . "id " . $bouteille['id'] . "]" ?></p>
-                <p class="pays">Pays : <?php echo $bouteille['pays'] ?></p>
-                <p class="type">Type : <?php echo $bouteille['type'] ?></p>
-                <p class="prix">Prix : <?php echo $bouteille['prix_saq'] ?>$</p>
-                <p class="format">Format : <?php echo $bouteille['format'] ?></p>
-                <p><a href="<?php echo $bouteille['url_saq'] ?>">Voir SAQ</a></p>
-            </div>
-        </div>
-</div>
+
+    </div>
+
+
 <?php
-    }
+        }
 ?>
+</div>
 </div>
