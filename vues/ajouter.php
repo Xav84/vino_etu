@@ -3,9 +3,9 @@
     <div id="ajouter_une_bouteille">
         <div class="remplir_Champs">
             Ajouter une nouvelle bouteille au cellier <i class="fas fa-info-circle"></i>
-            <span id="fenetre_info">Faites une recherche d'une bouteille dans le champs de recherche à droite et la sélectionner puis compléter le formulaire pour l'ajouter au cellier</span>
+            <span id="fenetre_info">Faites une recherche d'une bouteille dans le champs de recherche et la sélectionner puis compléter le formulaire pour l'ajouter au cellier</span>
         </div>
-        <form id="recherche_catalogue">
+        <form id="recherche_ajout">
             <input type="text" name="nom_bouteille" placeholder="Rechercher une bouteille">
         </form>
         <ul class="listeAutoComplete">
@@ -13,12 +13,12 @@
         <p>Veuillez remplir les champs suivants <br>
             <span>* Champs obligatoires</span></p>
         <p><label>Nom </label><span name="nom" data-id_cellier="<?= $_SESSION['info_utilisateur']['id'] ?>" class="nom_bouteille"></span></p>
-
+        <span id="messageSAQ"></span>
         <p><label>Prix * </label><input input type="number" name="prix" placeholder="Entrer le prix" value="" id="prix_bouteille"></p>
         <span class='erreur prix'></span>
         <p><label>Code SAQ </label><span name="code_saq"></span></p>
 
-        <span id="messageSAQ"></span>
+
         <p><label>Millesime </label><input type="text" name="millesime" placeholder="Entrer le millesime"></p>
         <span class='erreur millesime'></span>
         <p><label>Quantite * </label><input input type="text" name="quantite" value="1"></p>
