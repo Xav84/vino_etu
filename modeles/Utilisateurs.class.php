@@ -11,6 +11,41 @@ class Utilisateurs extends Modele
     private $erreurs = []; //tableau pour récupérer les erreurs lors de la vérifications des données
 
 
+    /**
+     * Cette méthode retourne la liste des utilisateurs contenues dans la base de données
+     * 
+     * @return Array $rows contenant tous les utilisateurs.
+     */
+    public function getListeUtilisateur()
+    {
+
+        $rows = array();
+        $res = $this->_db->query('SELECT * FROM vino__utilisateur WHERE type_utilisateur = 2');
+        if ($res->num_rows) {
+            while ($row = $res->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+
+    /**
+     * Cette méthode retourne la liste des utilisateurs contenues dans la base de données
+     * 
+     * @return Array $rows contenant tous les utilisateurs.
+     */
+    public function getNombreUtilisateur()
+    {
+
+        $rows = array();
+        $res = $this->_db->query('SELECT COUNT(id_utilisateur) FROM vino__utilisateur WHERE type_utilisateur = 2');
+        if ($res->num_rows) {
+            while ($row = $res->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
 
     /**
      * Fonction controlerUtilisateur : contrôler l'authentification de l'utilisateur dans la table vino__utilisateur
@@ -24,7 +59,6 @@ class Utilisateurs extends Modele
         $reponse = ['erreurs' => null, 'data' => null];
 
         $req = "SELECT * FROM vino__utilisateur u
-        INNER JOIN vino__cellier c ON u.id_utilisateur = c.fk_id_utilisateur
         WHERE courriel_utilisateur='$courriel' AND password_utilisateur = SHA2('$mot_de_passe', 256)";
 
         //Validation des données :
@@ -41,6 +75,17 @@ class Utilisateurs extends Modele
         if (empty($this->erreurs)) {
             if ($result = $this->_db->query($req)) {
                 $reponse['data'] = $result->fetch_assoc();
+
+                //Si l'utilisateur n'est pas administrateur, on récupère les infos de son cellier pour les mettre en variable de session :
+                if ($reponse['data']['type_utilisateur'] == 2) {
+                    $req_cellier = "SELECT * FROM vino__cellier
+                    WHERE fk_id_utilisateur =" . $reponse['data']['id_utilisateur'];
+
+                    if ($result_cellier = $this->_db->query($req_cellier)) {
+                        foreach ($res = $result_cellier->fetch_assoc() as $key => $value)
+                            $reponse['data'][$key] = $value;
+                    }
+                }
                 $_SESSION['info_utilisateur'] =  $reponse['data'];
             }
         } else {
@@ -54,6 +99,7 @@ class Utilisateurs extends Modele
 
         return $reponse;
     }
+
 
 
     /**
@@ -116,3 +162,4 @@ class Utilisateurs extends Modele
         return $reponse;
     }
 }
+// $_SESSION['info_utilisateur']['type_utilisateur'] == 2
