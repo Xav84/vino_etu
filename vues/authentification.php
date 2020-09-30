@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Patua+One&family=Syne&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body id="body_authentification">
 
 
     <header class="header">
