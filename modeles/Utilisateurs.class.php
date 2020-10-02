@@ -47,6 +47,7 @@ class Utilisateurs extends Modele
         return $rows;
     }
 
+
     /**
      * Fonction controlerUtilisateur : contrôler l'authentification de l'utilisateur dans la table vino__utilisateur
      * $identifiant
@@ -161,5 +162,46 @@ class Utilisateurs extends Modele
 
         return $reponse;
     }
+
+    /**
+     * Cette méthode supprime le compte de l'utilisateur dans la base de données
+     * 
+     * @param String $email l'adresse email de l'utilisateur connecté.
+     * 
+     * @return Array $reponse contenant la retour de la requete SQL
+     */
+    public function supprimerCompteUtilisateur($id_utilisateur, $id_cellier, $type_utlisateur)
+    {
+        $reponse = ["data" => false, "rollback" => null];
+
+        try {
+            // Début de la transaction :
+            $this->_db->begin_transaction();
+
+            //Si l'utilisateur n'est pas administrateur, on supprime les bouteilles dans le cellier et le cellier :
+            if ($type_utlisateur == 2) {
+                //1-supprimer les bouteilles du cellier :
+                $sql1 = "DELETE FROM cellier__bouteille WHERE vino__cellier_id =" . $id_cellier;
+                if ($this->_db->query($sql1)) $reponse['data'] = true;
+                else throw new Exception("Erreur lors de la suppression des bouteilles du cellier.");
+
+                //2-supprimer le cellier :
+                $sql2 = "DELETE FROM vino__cellier WHERE id =" . $id_cellier;
+                if ($this->_db->query($sql2)) $reponse['data'] = true;
+                else throw new Exception("Erreur lors de la suppression du cellier.");
+            }
+
+            //3-supprimer l'utilisateur :
+            $sql3 = "DELETE FROM vino__utilisateur WHERE id_utilisateur =" . $id_utilisateur;
+            if ($this->_db->query($sql3)) $reponse['data'] = true;
+            else throw new Exception("Erreur lors de la suppression de l'utilisateur.");
+
+            $this->_db->commit();
+        } catch (Exception $e) {
+            $this->_db->rollback();
+            $reponse["rollback"] = $e->getMessage();
+        }
+
+        return $reponse;
+    }
 }
-// $_SESSION['info_utilisateur']['type_utilisateur'] == 2
