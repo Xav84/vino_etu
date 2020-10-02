@@ -192,7 +192,7 @@ class Bouteille extends Modele
 		return $rows;
 	}
 
-	// MODIFS XAVIER
+
 
 	/**
 	 * Cette méthode retourne la bouteille contenue dans un cellier 
@@ -337,8 +337,47 @@ class Bouteille extends Modele
 
 		return $rows;
 	}
+	// MODIF XAVIER
+	/**
+	 * Cette méthode retourne une bouteille contenue dans le catalogue 
+	 * 
+	 * @return Array $rows contenant la bouteille.
+	 */
+	public function getBouteilleCatalogue($id)
+
+	{
+
+		$rows = array();
+		$requete = 'SELECT
+                                b.id,
+                                b.nom,
+                                b.pays,
+                                b.prix_saq,
+                                b.fk_type_id,
+								t.type
+                               
+                            FROM vino__bouteille b
+                            INNER JOIN ' . self::TYPE . ' t ON t.id = b.fk_type_id
+                            WHERE b.id =' . $id;
+
+		if (($res = $this->_db->query($requete)) ==     true) {
+			if ($res->num_rows) {
+				while ($row = $res->fetch_assoc()) {
+					$row['nom'] = trim($row['nom']);
+					$rows[] = $row;
+				}
+			}
+		} else {
+			throw new Exception("Erreur de requête sur la base de donnée", 1);
+			//$this->_db->error;
+		}
 
 
+
+		return $rows;
+	}
+
+	// FIN MODIF
 	/**
 	 * Cette méthode retourne un code SAQ d une bouteile contenue dans un cellier 
 	 * 
@@ -564,7 +603,58 @@ class Bouteille extends Modele
 
 		return $reponse;
 	}
+	// MODIF XAVIER
+	/**
+	 * Cette méthode modifie une bouteilles du catalogue
+	 * 
+	 * @param Object $data Tableau des données représentants la bouteille.
+	 * 
+	 * @return Boolean Succès ou échec de l'ajout.
+	 */
+	public function modifierInfoBouteilleCatalogue($data)
+	{
 
+		// var_dump($data);	
+		$reponse = ['erreurs' => null, 'data' => null];
+
+		//Validation des données :
+
+		/* validation nom : */
+
+		if (!preg_match('/^.{1,50}$/', $data->nom)) {
+
+			$this->erreurs['nom'] = "Veuillez entrer un nom de 50 caractères au maximum.";
+		}
+
+		/* validation pays : */
+
+		if (!preg_match('/^.{1,50}$/', $data->pays)) {
+
+			$this->erreurs['pays'] = "Veuillez entrer un pays de 50 caractères au maximum.";
+		}
+
+		/* validation prix */
+		if (!preg_match('/^(0|[1-9][0-9]*)(\.[0-9]{2})?$/', $data->prix_saq)) {
+			$this->erreurs['prix'] = "Veuillez entrer le prix au format suivant 12.34";
+		}
+
+		if (empty($this->erreurs)) {
+
+			$requete = "UPDATE 	vino__bouteille SET 
+								nom = '$data->nom',
+								pays = '$data->pays',
+								prix_saq = '$data->prix_saq',
+								fk_type_id = '$data->type'
+								WHERE id = '$data->id'";
+
+			$reponse['data'] = $this->_db->query($requete);
+		} else {
+			$reponse['erreurs'] = $this->erreurs;
+		}
+
+		return $reponse;
+	}
+	// FIN MODIF
 	/**
 	 * Cette méthode ajoute une ou des bouteilles au cellier
 	 * 
@@ -687,5 +777,41 @@ class Bouteille extends Modele
 
 			return false;
 		}
+	}
+
+	// MODIF XAVIER
+	/**
+	 * Cette méthode supprime une bouteille selon l'id dans le catalogue
+	 * 
+	 * @param int $id id de la bouteille
+	 * 
+	 * @return Boolean Succès ou échec de la suppression.
+	 */
+	public function supprimerBouteilleCatalogue($id)
+	{
+		$reponse = ["data" => false, "rollback" => null];
+
+		try {
+			// Début de la transaction :
+			$this->_db->begin_transaction();
+
+			//1-supprimer les bouteilles du meme id contenue dans tous les celliers :
+			$sql1 = "DELETE FROM cellier__bouteille WHERE vino__bouteille_id =" . $id;
+			if ($this->_db->query($sql1)) $reponse['data'] = true;
+			else throw new Exception("Erreur lors de la suppression de bouteilles liées a la table vino__bouteille.");
+
+			//2-supprimer la bouteille du catalogue :
+			$sql2 = "DELETE FROM vino__bouteille WHERE id =" . $id;
+			if ($this->_db->query($sql2)) $reponse['data'] = true;
+			else throw new Exception("Erreur lors de la suppression de la bouteille du catalogue.");
+
+			$this->_db->commit();
+		} catch (Exception $e) {
+			$this->_db->rollback();
+			$reponse["rollback"] = $e->getMessage();
+		}
+
+
+		return $reponse;
 	}
 }

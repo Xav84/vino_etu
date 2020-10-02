@@ -26,8 +26,11 @@ window.addEventListener("load", function () {
     date_achat: document.querySelector("[name='date_achat']"),
     code: document.querySelector("[name='code_saq']"),
     prix: document.querySelector("[name='prix']"),
+    prix_saq: document.querySelector("[name='prix_saq']"),
     garde_jusqua: document.querySelector("[name='garde_jusqua']"),
     notes: document.querySelector("[name='notes']"),
+    pays: document.querySelector("[name='pays']"),
+    type: document.querySelector("[name='type']"),
   };
 
   /* Comportement du bouton "boire" sur la page de cellier :*/
@@ -177,6 +180,7 @@ window.addEventListener("load", function () {
         let dateDuJour = new Date().toISOString().substring(0, 10);
         document.querySelector("[name='date_achat']").value = dateDuJour;
         // console.log("DATE", dateDuJour);
+
         bouteille.nom.dataset.id = evt.target.dataset.id;
         bouteille.nom.innerHTML = evt.target.innerHTML;
 
@@ -490,7 +494,70 @@ window.addEventListener("load", function () {
         });
     });
   }
+  // MODIF XAVIER
+  //Comportement du bouton "modifier la bouteille" de la page modifierCatalogue :
+  let btnModifierCatalogue = document.querySelector(
+    "[name='modifierBouteilleCatalogue']"
+  );
+  if (btnModifierCatalogue) {
+    btnModifierCatalogue.addEventListener("click", function (evt) {
+      console.log("click btn modifier");
+      var paramCatalogue = {
+        id: bouteille.nom.dataset.id,
+        nom: bouteille.nom.value,
+        prix_saq: bouteille.prix_saq.value,
+        pays: bouteille.pays.value,
+        type: bouteille.type.value,
+      };
+      console.log(paramCatalogue);
+      let requete = new Request(
+        BaseURL + "index.php?requete=modifierBouteilleCatalogue",
+        {
+          method: "POST",
+          body: JSON.stringify(paramCatalogue),
+        }
+      );
 
+      let modal = document.querySelector(".modal");
+
+      fetch(requete)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            throw new Error("Erreur");
+          }
+        })
+        .then((response) => {
+          if (response.data == null) {
+            console.log(response);
+            document.querySelector(".pays").innerHTML =
+              response.erreurs.pays || "";
+            document.querySelector(".prix").innerHTML =
+              response.erreurs.prix || "";
+          }
+          if (response.data == true) {
+            modal.style.display = "block";
+            console.log(document.querySelector(".msg_sql"));
+            document.querySelector(".msg_sql").innerHTML =
+              "Modification effectué";
+          } else {
+            document.querySelector(".msg_sql").innerHTML =
+              "Erreur de modification";
+          }
+        })
+
+        .catch((error) => {
+          console.error(error);
+        });
+      document
+        .querySelector(".retour_catalogue")
+        .addEventListener("click", (_) => {
+          window.location.href = `${BaseURL}?requete=afficherCatalogue`;
+        });
+    });
+  }
+  // FIN MODIF
   // Comportement du bouton "valider_authentification" du la page d'authentification :
   let btnAuthentification = document.querySelector(
     "[name='validerAuthentification']"

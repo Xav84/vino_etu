@@ -37,6 +37,9 @@ class Controler
             case 'modifierBouteilleCellier':
                 $this->modifierBouteilleCellier();
                 break;
+            case 'modifierBouteilleCatalogue':
+                $this->modifierBouteilleCatalogue();
+                break;
             case 'ajouterBouteilleCellier':
                 $this->ajouterBouteilleCellier();
                 break;
@@ -60,6 +63,9 @@ class Controler
                 break;
             case 'supprimerBouteille':
                 $this->supprimerBouteille();
+                break;
+            case 'supprimerBouteilleCatalogue':
+                $this->supprimerBouteilleCatalogue();
                 break;
             case 'infoCodeSaq':
                 $this->getCodeSaq();
@@ -325,7 +331,29 @@ class Controler
             include("vues/pied.php");
         }
     }
+    // MODIF XAVIER
+    /**
+     * Récupère les informations sur la bouteille à modifier et déclenche la requete sql de modification.
+     * Si php://input est vide, affiche la page de modification de bouteille
+     * @return mixted
+     */
+    private function modifierBouteilleCatalogue()
+    {
+        $body = json_decode(file_get_contents('php://input'));
 
+        if (!empty($body)) {
+            $bte = new Bouteille();
+            $resultat = $bte->modifierInfoBouteilleCatalogue($body);
+            echo json_encode($resultat);
+        } else {
+            $bte = new Bouteille();
+            $data = $bte->getBouteilleCatalogue($_GET['id']);
+            include("vues/entete.php");
+            include("vues/modifierCatalogue.php");
+            include("vues/pied.php");
+        }
+    }
+    // FIN MODIF
     /**
      * Récupère les informations sur la bouteille dont la quantité doit être modifiée et déclenche la requete sql de modification de quantité avec -1.
      * @return json
@@ -396,5 +424,21 @@ class Controler
         $bte = new Bouteille();
         $resultat = $bte->supprimerBouteilleCellier($_GET['id'], $_GET['cellier']);
         echo json_encode($resultat);
+    }
+    // MODIF XAVIER
+    /**
+     * Récupère l'id de la bouteille à supprimer et déclenche la requete sql de suppression.
+     * @return json
+     */
+    private function supprimerBouteilleCatalogue()
+    {
+        //vérifie que l'usager connecté est bien l'admin
+        if ($_SESSION['info_utilisateur']['type_utilisateur'] == 1) {
+            $body = json_decode(file_get_contents('php://input'));
+            $bte = new Bouteille();
+            $resultat = $bte->supprimerBouteilleCatalogue($_GET['id']);
+            // echo json_encode($resultat);
+            $this->afficherCatalogue();
+        }
     }
 }
