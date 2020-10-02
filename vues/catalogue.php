@@ -21,7 +21,15 @@
             if (isset($_POST["type"])) {
             ?>
                 <select name="type">
-
+                    <?php
+                    if ($_SESSION['info_utilisateur']['type_utilisateur'] == 1) {
+                    ?>
+                        <option <?php if (!(strcmp("id", $_POST["type"]))) {
+                                    echo "selected=\"selected\"";
+                                } ?>value="id">Id</option>
+                    <?php
+                    }
+                    ?>
                     <option <?php if (!(strcmp("nom", $_POST["type"]))) {
                                 echo "selected=\"selected\"";
                             } ?>value="nom">Nom</option>
@@ -42,6 +50,13 @@
 
                 <select name="type">
                     <option value="" disabled selected>Choisir un tri</option>
+                    <?php
+                    if ($_SESSION['info_utilisateur']['type_utilisateur'] == 1) {
+                    ?>
+                        <option value="id">Id</option>
+                    <?php
+                    }
+                    ?>
                     <option value="nom">Nom</option>
                     <option value="pays">Pays</option>
                     <option value="type">Type de vin</option>
@@ -99,10 +114,19 @@
                     </div>
 
                     <div class="description">
-
-                        <h4 class="nom"><?php echo $bouteille['nom'] ?></h4>
-
-
+                        <!-- MODIF XAVIER -->
+                        <?php
+                        if ($_SESSION['info_utilisateur']['type_utilisateur'] == 1) {
+                        ?>
+                            <h4 class="nom"><?php echo $bouteille['nom'] . " " . "[id:" . $bouteille['id'] . "]" ?></h4>
+                        <?php
+                        } else {
+                        ?>
+                            <h4 class="nom"><?php echo $bouteille['nom'] ?></h4>
+                        <?php
+                        }
+                        ?>
+                        <!-- FIN MODIF -->
                         <div class="description_colunne1">
                             <p class="pays"><i class='fas fa-flag'></i> <?php echo  $bouteille['pays'] ?></p>
                             <p class="type"><i class='fas fa-wine-bottle'></i> <?php echo $bouteille['type'] ?></p>
@@ -119,12 +143,12 @@
                         </div>
                     </div>
                     <div class="options" data-id_bouteille="<?php echo $bouteille['id'] ?>">
-                        <!-- MODIFS XAVIER -->
+
                         <?php
                         if ($_SESSION['info_utilisateur']['type_utilisateur'] == 1) {
                         ?>
-                            <button class='btnModifier'><a href="?requete=modifierBouteilleCellier&id=<?php echo $bouteille['id'] ?>">Modifier</a></button>
-                            <button class='btnSupprimer'><a href="?requete=supprimerBouteille&id=<?php echo $bouteille['id'] ?>">Supprimer</a></button>
+                            <button class='btnModifier'><a href="?requete=modifierBouteilleCatalogue&id=<?php echo $bouteille['id'] ?>">Modifier</a></button>
+                            <button class='btnSupprimerCatalogue'><a href="?requete=supprimerBouteilleCatalogue&id=<?php echo $bouteille['id'] ?>">Supprimer</a></button>
                         <?php
                         }
                         ?>
