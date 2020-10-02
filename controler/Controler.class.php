@@ -201,6 +201,10 @@ class Controler
         } else {
             $bte = new Bouteille();
             $data = $bte->getListeBouteilleCellier($_GET['id_utilisateur'] ?? $id_utilisateur);
+            // MODIF XAVIER
+            $utilisateur = new Utilisateurs();
+            $dataCellier = $utilisateur->getInfoCellierUtilisateur($_GET['id_utilisateur'] ?? $id_utilisateur);
+            // FIN MODIF
             include("vues/entete.php");
             include("vues/cellier.php");
             include("vues/pied.php");

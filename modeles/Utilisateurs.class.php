@@ -28,7 +28,25 @@ class Utilisateurs extends Modele
         }
         return $rows;
     }
+    // MODIF XAVIER
+    /**
+     * Cette méthode retourne les infos contenues dans la table vino_cellier relié à un utilisateur donné
+     * 
+     * @return Array $rows contenant tous les infos.
+     */
+    public function getInfoCellierUtilisateur($id_utilisateur)
+    {
 
+        $rows = array();
+        $res = $this->_db->query('SELECT * FROM vino__cellier WHERE fk_id_utilisateur = ' . $id_utilisateur);
+        if ($res->num_rows) {
+            while ($row = $res->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+    // FIN MODIF
     /**
      * Cette méthode retourne la liste des utilisateurs contenues dans la base de données
      * 

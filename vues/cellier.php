@@ -88,7 +88,11 @@
             ?>
             <input type="submit" name="tri" value="Triez"></form>
     </div>
-    <h2>Cellier</h2>
+    <!-- MODIF XAVIER -->
+    <h2>Cellier<br><small><?php echo $dataCellier[0]['notes_cellier'] . " " ?><br>
+            Création : <?php echo $dataCellier[0]['date_creation_cellier'] ?></small>
+    </h2>
+    <!-- FIN MODIF -->
     <div class="container_bouteille">
         <?php
         if ($data == null) {
