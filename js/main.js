@@ -494,7 +494,7 @@ window.addEventListener("load", function () {
         });
     });
   }
-  // MODIF XAVIER
+
   //Comportement du bouton "modifier la bouteille" de la page modifierCatalogue :
   let btnModifierCatalogue = document.querySelector(
     "[name='modifierBouteilleCatalogue']"
@@ -557,7 +557,7 @@ window.addEventListener("load", function () {
         });
     });
   }
-  // FIN MODIF
+
   // Comportement du bouton "valider_authentification" du la page d'authentification :
   let btnAuthentification = document.querySelector(
     "[name='validerAuthentification']"

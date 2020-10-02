@@ -24,10 +24,12 @@
                             <p class="pays"><i class="fas fa-id-card"></i> <?php echo  $utilisateur['id_utilisateur'] ?></p>
                             <p class="type"><i class="fas fa-at"></i> <?php echo $utilisateur['courriel_utilisateur'] ?></p>
 
+
                         </div>
 
                     </div>
                     <div class="options" data-id_utilisateur="<?php echo $utilisateur['id_utilisateur'] ?>">
+
 
                         <button class='btnSupprimer'><a href="?requete=supprimerutilisateur&id=<?php echo $utilisateur['id_utilisateur'] ?>">Supprimer</a></button>
 

@@ -378,6 +378,8 @@ class Bouteille extends Modele
 	}
 
 	// FIN MODIF
+
+
 	/**
 	 * Cette méthode retourne un code SAQ d une bouteile contenue dans un cellier 
 	 * 
