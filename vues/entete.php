@@ -39,7 +39,7 @@
                 <label for="toggle">&#9776;</label>
                 <input type="checkbox" id="toggle" />
                 <ul class="menu">
-                    <!-- MODIFS XAVIER -->
+
                     <?php
                     if ($_SESSION['info_utilisateur']['type_utilisateur'] == 2) {
                     ?>
