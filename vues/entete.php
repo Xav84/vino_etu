@@ -1,3 +1,4 @@
+<?php if(isset($_SESSION['info_utilisateur'])) : ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -24,29 +25,24 @@
 
 <body>
     <header class="header">
-
-        <aside>
-
-            <span class="utlisateur_connecte"><i class='fas fa-user-circle'></i> Bienvenue <?= $_SESSION['info_utilisateur']['prenom_utilisateur'] ?? '' ?> !</span>
-
-        </aside>
-
-
-
         <div class="logo_nav">
+            <!-- si l'utilisateur n'est pas admin, le clic sur le logo redirige vers le cellier : -->
+             <?php if($_SESSION['info_utilisateur']['type_utilisateur'] == 2) :?>
             <a href="?requete=accueil" class="logo"><img src="./images/logo_vino.png"></a>
+            <!-- si l'utilisateur est admin, le clic sur le logo redirige vers l'interface admin : -->
+            <?php elseif($_SESSION['info_utilisateur']['type_utilisateur'] == 1) : ?>
+            <a href="?requete=afficherInterfaceAdmin" class="logo"><img src="./images/logo_vino.png"></a>
+            <?php endif; ?> 
             <nav class="nav">
                 <label for="toggle">&#9776;</label>
                 <input type="checkbox" id="toggle" />
                 <ul class="menu">
-
-                    <?php
+                <?php
                     if ($_SESSION['info_utilisateur']['type_utilisateur'] == 2) {
                     ?>
                         <li><a href="?requete=accueil">Mon cellier</a></li>
                         <li><a href="?requete=ajouterNouvelleBouteilleCellier">Ajouter une bouteille au cellier</a></li>
                     <?php
-
                     }
                     ?>
                     <?php
@@ -59,16 +55,10 @@
                     ?>
                     <li><a href="?requete=afficherCatalogue">Catalogue de la SAQ</a></li>
                     <li> <a href="?requete=deconnexion"> Déconnexion</a></li>
-
+                    <li class="utlisateur_connecte"><a href="index.php?requete=modifierCompteUtilisateur"><i class='fas fa-user-circle'></i>Mon compte</a></li>
                 </ul>
-
-
             </nav>
         </div>
-
-
-
-
     </header>
-
     <main>
+<?php endif?>

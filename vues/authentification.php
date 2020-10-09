@@ -23,15 +23,6 @@
 
 
     <header class="header">
-        <aside>
-
-
-
-        </aside>
-
-
-
-
         <div class="logo_nav connexion">
             <a href="?requete=accueil" class="logo"><img src="./images/logo_vino.png"></a>
         </div>
@@ -46,7 +37,7 @@
                 <div class="form">
                     <p class="titre_connexion">Connexion au compte <br>
                         <span>* Champs obligatoires</span></p>
-                    <p class="message">Nouvel utilisateur?<a href="?requete=ajouterNouvelUtilisateur"> Créer un compte</a></p>
+                    <p class="message">Nouvel utilisateur?<a href="?requete=creerCompte"> Créer un compte</a></p>
                     <form class="authentification-form" method="post">
                         <p><label>Courriel *</label><br>
 

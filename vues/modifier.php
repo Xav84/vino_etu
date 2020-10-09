@@ -1,3 +1,5 @@
+<?php if(isset($_SESSION['info_utilisateur'])) : ?>
+
 <div class="modifier">
 
     <div class="modifierBouteille" vertical layout>
@@ -23,8 +25,10 @@
                                                                                 else if ($data[0]["garde_jusqua"] == "non") echo "";
                                                                                 else echo $data[0]["garde_jusqua"] ?>'></p>
         <span class='erreur garde_jusqua'></span>
-        <p><label>Notes </label> <input type="text" name="notes" value='<?php echo $data[0]["notes"] ?>'></p>
+        <p><label>Commentaire </label> <input type="text" name="notes" value='<?php echo $data[0]["notes"] ?>'></p>
         <span class='erreur notes'></span>
+        <p><label>Évaluation</label><input type="number" name="note_degustation" max="5" min="0" value='<?php echo $data[0]["note_degustation"] ?>'></p>
+        <span class='erreur evaluation'></span>
         <button name="modifierBouteilleCellier">Modifier la bouteille</button>
     </div>
     <div class="modal">
@@ -36,3 +40,7 @@
     </div>
 </div>
 </div>
+
+<?php else : ?>
+    <p>Accès interdit</p>
+<?php endif?>

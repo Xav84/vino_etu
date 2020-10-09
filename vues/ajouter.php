@@ -1,3 +1,4 @@
+<?php if(isset($_SESSION['info_utilisateur'])) : ?>
 <div class="ajouter">
 
     <div id="ajouter_une_bouteille">
@@ -27,7 +28,7 @@
         <span class='erreur date_achat'></span>
         <p><label>Garde </label><input input type="text" name="garde_jusqua" placeholder="Entrer la date de conservation"></p>
         <span class='erreur garde_jusqua'></span>
-        <p><label>Notes </label><input input type="text" name="notes" placeholder="Entrer une note"></p>
+        <p><label>Commentaires</label><input input type="text" name="notes" placeholder="Entrer une note"></p>
         <span class='erreur notes'></span>
 
         <button name="ajouterBouteilleCellier">Ajouter la bouteille</button>
@@ -42,3 +43,7 @@
     </div>
 </div>
 </div>
+
+<?php else : ?>
+    <p>Accès interdit</p>
+<?php endif?>

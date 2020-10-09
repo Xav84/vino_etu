@@ -1,3 +1,4 @@
+<?php if(isset($_SESSION['info_utilisateur'])) : ?>
 <h2>Importation de bouteilles de la SAQ</h2>
 
 <form id="importer" method="post">
@@ -30,3 +31,6 @@ if (isset($_POST['importer'])) {
     } else echo "<h2 class='erreur'>Veuillez entrer les valeurs :24, 48 ou 96";
 }
 ?>
+<?php else : ?>
+    <p>Accès interdit</p>
+<?php endif?>

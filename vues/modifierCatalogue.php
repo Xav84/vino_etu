@@ -1,3 +1,4 @@
+<?php if(isset($_SESSION['info_utilisateur'])) : ?>
 <div class="modifier">
 
     <div class="modifierBouteille" vertical layout>
@@ -16,10 +17,10 @@
         <p><label>Prix *</label><input input type=number name="prix_saq" value='<?php echo $data[0]["prix_saq"] ?>'></p>
         <span class='erreur prix'></span>
         <p><label>Type </label><select name="type"></p>
-        <option <?php if ($data[0]["fk_type_id"] == 1) {
+        <option <?php if ($data[0]["type"] == "Vin rouge") {
                     echo "selected=\"selected\"";
                 } ?>value="1">Vin rouge</option>
-        <option <?php if ($data[0]["fk_type_id"] == 2) {
+        <option <?php if ($data[0]["type"] == "Vin blanc") {
                     echo "selected=\"selected\"";
                 } ?>value="2">Vin blanc</option>
         </select>
@@ -35,3 +36,6 @@
     </div>
 </div>
 </div>
+<?php else : ?>
+    <p>Accès interdit</p>
+<?php endif?>

@@ -40,6 +40,12 @@ class Controler
             case 'modifierBouteilleCatalogue':
                 $this->modifierBouteilleCatalogue();
                 break;
+            case 'ajouterNouvelleBouteilleCellierDepuisleCatalogue':
+                $this->ajouterNouvelleBouteilleCellierDepuisleCatalogue();
+                break;
+            case 'afficherUneBouteille':
+                $this->afficherUneBouteille();
+                break;
             case 'ajouterBouteilleCellier':
                 $this->ajouterBouteilleCellier();
                 break;
@@ -51,6 +57,9 @@ class Controler
                 break;
             case 'creerCompte':
                 $this->creerCompte();
+                break;
+            case 'modifierCompteUtilisateur':
+                $this->modifierCompteUtilisateur();
                 break;
             case 'afficherCellier':
                 $this->afficherCellier();
@@ -92,7 +101,7 @@ class Controler
         if (isset($_SESSION['info_utilisateur'])) {
             $this->afficherCellier($_SESSION['info_utilisateur']['id_utilisateur']);
         } else {
-            $this->creerCompte();
+            $this->controllerUtilisateur();
         }
     }
 
@@ -185,6 +194,8 @@ class Controler
             // var_dump($type, $ordre);
             // exit;
             $data = $bte->getListeBouteilleCellierTri($type, $ordre, $_SESSION['info_utilisateur']['id']); //$_SESSION['info_utilisateur']['id'] = id du cellier
+            $utilisateur = new Utilisateurs();
+            $dataCellier = $utilisateur->getInfoCellierUtilisateur($_GET['id_utilisateur'] ?? $id_utilisateur);
             include("vues/entete.php");
             include("vues/cellier.php");
             include("vues/pied.php");
@@ -195,16 +206,16 @@ class Controler
             // var_dump($recherche);
             // exit;
             $data = $bte->getRechercheBouteilleCellier($recherche, $_SESSION['info_utilisateur']['id']); //$_SESSION['info_utilisateur']['id'] = id du cellier
+            $utilisateur = new Utilisateurs();
+            $dataCellier = $utilisateur->getInfoCellierUtilisateur($_GET['id_utilisateur'] ?? $id_utilisateur);
             include("vues/entete.php");
             include("vues/cellier.php");
             include("vues/pied.php");
         } else {
             $bte = new Bouteille();
             $data = $bte->getListeBouteilleCellier($_GET['id_utilisateur'] ?? $id_utilisateur);
-            // MODIF XAVIER
             $utilisateur = new Utilisateurs();
             $dataCellier = $utilisateur->getInfoCellierUtilisateur($_GET['id_utilisateur'] ?? $id_utilisateur);
-            // FIN MODIF
             include("vues/entete.php");
             include("vues/cellier.php");
             include("vues/pied.php");
@@ -335,7 +346,7 @@ class Controler
             include("vues/pied.php");
         }
     }
-    // MODIF XAVIER
+
     /**
      * Récupère les informations sur la bouteille à modifier et déclenche la requete sql de modification.
      * Si php://input est vide, affiche la page de modification de bouteille
@@ -357,7 +368,7 @@ class Controler
             include("vues/pied.php");
         }
     }
-    // FIN MODIF
+
     /**
      * Récupère les informations sur la bouteille dont la quantité doit être modifiée et déclenche la requete sql de modification de quantité avec -1.
      * @return json
@@ -415,6 +426,38 @@ class Controler
         $this->controllerUtilisateur();
     }
 
+    /* Permet d'accéder à la page de profil de l'utilisateur connecté et de lancer la requete de modification si les champs sont remplis */
+    private function modifierCompteUtilisateur()
+    {
+        $body = json_decode(file_get_contents('php://input'));
+
+        if (!empty($body)) {
+            if(isset($body->modifierIntituleCellier)) {
+                $utilisateur = new Utilisateurs();
+                $resultat = $utilisateur->modifierIntituleCellier($body->id_cellier, $body->nouvelIntitule);
+                echo json_encode($resultat);
+            }
+            else if (isset($body->modifierEmail)) {
+                $utilisateur = new Utilisateurs();
+                $resultat = $utilisateur->modifierEmailUtilisateur($body->ancienEmail, $body->nouvelEmail);
+                echo json_encode($resultat);
+            } else if (isset($body->modifierMdp)) {
+                $utilisateur = new Utilisateurs();
+                $resultat = $utilisateur->modifierMdpUtilisateur($body->ancienMdp, $body->nouveauMdp, $body->confirmationMdp, $body->ancienEmail);
+                echo json_encode($resultat);
+            } else if (isset($body->supprimerCompte)) {
+                $utilisateur = new Utilisateurs();
+                $resultat = $utilisateur->supprimerCompteUtilisateur($body->id_utilisateur, $body->id_cellier, $body->type_utilisateur);
+                echo json_encode($resultat);
+            }
+        } else {
+            $utilisateur = new Utilisateurs();
+            $data = $utilisateur->getUtilisateur($_SESSION['info_utilisateur']['courriel_utilisateur']);
+            include("vues/entete.php");
+            include("vues/gestionCompteUtilisateur.php");
+            include("vues/pied.php");
+        }
+    }
 
     /**
      * Récupère l'id de la bouteille à supprimer et déclenche la requete sql de suppression.
@@ -422,14 +465,11 @@ class Controler
      */
     private function supprimerBouteille()
     {
-
-
-        $body = json_decode(file_get_contents('php://input'));
         $bte = new Bouteille();
         $resultat = $bte->supprimerBouteilleCellier($_GET['id'], $_GET['cellier']);
         echo json_encode($resultat);
     }
-    // MODIF XAVIER
+
     /**
      * Récupère l'id de la bouteille à supprimer et déclenche la requete sql de suppression.
      * @return json
@@ -441,8 +481,42 @@ class Controler
             $body = json_decode(file_get_contents('php://input'));
             $bte = new Bouteille();
             $resultat = $bte->supprimerBouteilleCatalogue($_GET['id']);
-            // echo json_encode($resultat);
-            $this->afficherCatalogue();
+            echo json_encode($resultat);
         }
+    }
+
+    /**
+     * Récupère les informations sur la bouteille à ajouter et déclenche la requete sql d'ajout.
+     * @return mixted
+     */
+    private function ajouterNouvelleBouteilleCellierDepuisleCatalogue()
+    {
+        $body = json_decode(file_get_contents('php://input'));
+
+       if(!empty($body)){ 
+            $bte = new Bouteille();
+            $resultat = $bte->ajouterDepuisLeCatalogue($body);
+            echo json_encode($resultat);
+       }else{ 
+        $body = json_decode(file_get_contents('php://input'));
+            $bte = new Bouteille();
+            $data = $bte-> getBouteilleCatalogue($_GET['id']);
+            include("vues/entete.php");
+            include("vues/catalogue.php");
+            include("vues/pied.php");
+        
+       }
+    }
+
+
+    private function afficherUneBouteille()
+    {
+
+        $body = json_decode(file_get_contents('php://input'));
+        $bte = new Bouteille();
+        $data = $bte->getBouteilleCatalogue($_GET['id']);
+        include("vues/entete.php");
+        include("vues/AfficherUneBouteille.php");
+        include("vues/pied.php");
     }
 }

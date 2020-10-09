@@ -10,7 +10,6 @@ class Utilisateurs extends Modele
 
     private $erreurs = []; //tableau pour récupérer les erreurs lors de la vérifications des données
 
-
     /**
      * Cette méthode retourne la liste des utilisateurs contenues dans la base de données
      * 
@@ -20,7 +19,9 @@ class Utilisateurs extends Modele
     {
 
         $rows = array();
-        $res = $this->_db->query('SELECT * FROM vino__utilisateur WHERE type_utilisateur = 2');
+        $res = $this->_db->query('SELECT * FROM vino__utilisateur u
+        INNER JOIN vino__cellier c ON c.fk_id_utilisateur = u.id_utilisateur
+        WHERE type_utilisateur = 2');
         if ($res->num_rows) {
             while ($row = $res->fetch_assoc()) {
                 $rows[] = $row;
@@ -28,7 +29,7 @@ class Utilisateurs extends Modele
         }
         return $rows;
     }
-    // MODIF XAVIER
+
     /**
      * Cette méthode retourne les infos contenues dans la table vino_cellier relié à un utilisateur donné
      * 
@@ -46,7 +47,7 @@ class Utilisateurs extends Modele
         }
         return $rows;
     }
-    // FIN MODIF
+
     /**
      * Cette méthode retourne la liste des utilisateurs contenues dans la base de données
      * 
@@ -64,7 +65,6 @@ class Utilisateurs extends Modele
         }
         return $rows;
     }
-
 
     /**
      * Fonction controlerUtilisateur : contrôler l'authentification de l'utilisateur dans la table vino__utilisateur
@@ -118,7 +118,6 @@ class Utilisateurs extends Modele
 
         return $reponse;
     }
-
 
 
     /**
@@ -180,6 +179,144 @@ class Utilisateurs extends Modele
 
         return $reponse;
     }
+
+
+
+    /**
+     * Cette méthode retourne les informations d'un utilisateur à partir de son email
+     * 
+     * @param String $email l'email de l'utilisateur' connecté.
+     * 
+     * @return Array contenant la retour de la requete SQL ($reponse['data'])
+     */
+    public function getUtilisateur($email)
+    {
+        $reponse = ["data" => null];
+        $sql = "SELECT * FROM vino__utilisateur
+        WHERE courriel_utilisateur = ?";
+
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bind_param('s', $email);
+        $reponse['data'] = $stmt->execute();
+
+        //si la requete s'est bien exécutée :
+        if ($reponse['data'] === true) {
+            $reponse['utilisateur'] = $stmt->get_result()->fetch_assoc();
+        }
+        return $reponse;
+    }
+
+
+    /**
+     * Cette méthode modifie l'intitulé du cellier d'un utilisateur
+     * 
+     * @param String $id_utilisateur l'id de l'utilisateur' connecté.
+     * 
+     * @return Array contenant la retour de la requete SQL ($reponse['data'])
+     */
+    public function modifierIntituleCellier($id_cellier, $nouvelIntitule)
+    {
+        $reponse = ["data" => null];
+        $sql = "UPDATE vino__cellier SET notes_cellier = ? WHERE id = ?";
+
+        $stmt = $this->_db->prepare($sql);
+        $stmt->bind_param('si', $nouvelIntitule, $id_cellier);
+
+        //si la requete s'est bien exécutée :
+        if ($stmt->execute()) {
+            $reponse['data'] = true;
+            /* si la requête de modification s'est bien passée, remplacer l'ancien intitulé du celleir par le nouveau dans la variable de session : */
+            $_SESSION['info_utilisateur']['notes_cellier'] = $nouvelIntitule;
+        }
+        return $reponse;
+    }
+
+    /**
+     * Cette méthode modifie l'email de l'utilisateur dans la base de données
+     * 
+     * @param String : 
+     * $ancienEmail l'ancien email de l'utilisateur connecté.
+     * $nouvelEmail le nouvel email de l'utilisateur.
+     * 
+     * @return Array $reponse contenant la retour de la requete SQL, les eventuelles erreurs et le nouvel email
+     */
+
+    public function modifierEmailUtilisateur($ancienEmail, $nouvelEmail)
+    {
+        $reponse = ["data" => null, "erreurs" => null, "nouvelEmail" => $nouvelEmail];
+
+        /* validation des données :*/
+        /* courriel : */
+        if (!filter_var($nouvelEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->erreurs['courriel'] = "Veuillez entrer un courriel valide.";
+        }
+
+        if (empty($this->erreurs)) {
+            /* Vérifier si l'adresse email existe déjà dans la base de données : */
+            $reponse["data"] = $this->_db->query("SELECT * FROM vino__utilisateur WHERE courriel_utilisateur = '" . $nouvelEmail . "'")->num_rows;
+
+
+            /* Si l'adresse n'existe pas déjà on remplace l'ancien email par le nouveau, sinon affichage d'une erreur : */
+            if ($reponse["data"] === 0) {
+                $sql = "UPDATE vino__utilisateur SET courriel_utilisateur = '" . $nouvelEmail . "' WHERE courriel_utilisateur = '" . $ancienEmail . "'";
+                $reponse['data'] = $this->_db->query($sql);
+
+                /* si la requête de modification s'est bien passée, remplacer les infos de courriel dans la variable de session : */
+                if ($reponse['data'] === true) {
+                    $_SESSION['info_utilisateur']['courriel_utilisateur'] = $nouvelEmail;
+                }
+            } else {
+                $reponse['erreurs']['existant'] = "Ce courriel existe déjà";
+            }
+        } else {
+            $reponse['erreurs'] = $this->erreurs;
+        }
+
+        return $reponse;
+    }
+
+
+    /**
+     * Cette méthode modifie le mot de passe de l'utilisateur dans la base de données
+     * 
+     * @param String $ancienMdp le mot de passe de l'utilisateur connecté.
+     * 
+     * @return Array $reponse contenant la retour de la requete SQL, les eventuelles erreurs
+     */
+    public function modifierMdpUtilisateur($ancienMdp, $nouveauMdp, $confirmationMdp, $email)
+    {
+        $reponse = ["data" => null, "erreurs" => null];
+
+        /* validation des données :*/
+        /* mot de passe au bon format: */
+        if (!preg_match("/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/", $nouveauMdp)) {
+            $this->erreurs['mdpInvalide'] = "Votre mot de passe doit contenir 6 caractères ou plus et au moins une lettre, un nombre et un caractère spécial.";
+        }
+
+        /* l'ancien mot de passe est le bon : */
+        if (hash("sha256", $ancienMdp) !== $_SESSION['info_utilisateur']['password_utilisateur'])
+            $this->erreurs['mauvaisMdp'] = "Le mot de passe entré est incorrect.";
+
+        /* Le nouveau mot de passe et la confirmation sont identiques : */
+        if ($nouveauMdp !== $confirmationMdp)
+            $this->erreurs['mdpDifferent'] = "Les deux mots de passe entrés sont différents.";
+
+
+        if (empty($this->erreurs)) {
+            $sql = "UPDATE vino__utilisateur SET password_utilisateur = SHA2('" . $nouveauMdp . "', 256) WHERE courriel_utilisateur = '" . $email . "'";
+            $reponse['data'] = $this->_db->query($sql);
+
+            /* si la requête de modification s'est bien passée, remplacer les infos de mode de passe dans la variable de session : */
+            if ($reponse['data'] === true) {
+                $_SESSION['info_utilisateur']['password_utilisateur'] = hash('sha256', $nouveauMdp);
+            }
+        } else {
+            $reponse['erreurs'] = $this->erreurs;
+        }
+
+        return $reponse;
+    }
+
 
     /**
      * Cette méthode supprime le compte de l'utilisateur dans la base de données

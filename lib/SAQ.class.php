@@ -29,8 +29,6 @@ class SAQ extends Modele
 		}
 	}
 
-	// MODIF XAVIER
-
 	/**
 	 * getProduits
 	 * Cette méthode retourne le nombre de bouteilles importées. 
@@ -101,7 +99,6 @@ class SAQ extends Modele
 
 		return $i;
 	}
-	// FIN MODIFS
 
 	/**
 	 * get_inner_html
